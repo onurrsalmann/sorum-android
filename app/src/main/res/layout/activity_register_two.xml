@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/white"
+        android:orientation="vertical"
+        tools:context=".RegisterActivity"
+        android:gravity="center_horizontal">
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="175dp"
+            android:scaleType="fitEnd"
+            android:scaleX=".7"
+            android:scaleY=".7"
+            android:src="@drawable/logo" />
+
+        <TextView
+            android:id="@+id/textView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Lütfen Bilgilerinizi Doldurunuz"
+            android:textColor="@color/black"
+            android:textSize="15dp"/>
+
+        <EditText
+            android:id="@+id/ad"
+            android:layout_width="match_parent"
+            android:layout_height="45dp"
+            android:layout_marginLeft="25dp"
+            android:layout_marginTop="15dp"
+            android:layout_marginRight="25dp"
+            android:layout_marginBottom="8dp"
+            android:background="@drawable/rounded_edittext"
+            android:ems="10"
+            android:hint="Adınız"
+            android:inputType="textPersonName"
+            android:paddingLeft="10dp"
+            android:textColor="@color/black"
+            android:textColorHint="@color/hintColor"
+            android:topLeftRadius="20dp" />
+
+        <TextView
+            android:id="@+id/dgtarihyazi"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Doğum Tarihiniz"
+            android:textColor="@color/black"
+            android:layout_marginBottom="2dp"
+            android:textSize="15dp"/>
+
+        <DatePicker
+            android:id="@+id/dgtarih"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="25dp"
+            android:layout_marginRight="25dp"
+            android:layout_weight="0"
+            android:background="@drawable/rounded_edittext"
+            android:calendarViewShown="false"
+            android:datePickerMode="spinner"
+            android:padding="0dp"
+            android:textColor="@color/black"
+            android:visibility="visible" />
+
+        <Spinner
+            android:id="@+id/hazirlan"
+            android:layout_width="match_parent"
+            android:layout_height="45dp"
+            android:layout_marginLeft="25dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginRight="25dp"
+            android:layout_marginBottom="8dp"
+            android:autofillHints=""
+            android:background="@drawable/rounded_edittext"
+            android:ems="10"
+            android:paddingLeft="10dp"
+            android:textColor="@color/black" />
+
+        <Button
+            android:id="@+id/ilerle"
+            android:layout_width="match_parent"
+            android:layout_height="45dp"
+            android:layout_marginLeft="25dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginRight="25dp"
+            android:layout_marginBottom="8dp"
+            android:background="@drawable/rounded_button"
+            android:paddingLeft="10dp"
+            android:text="İlerle"
+            android:textColor="@color/white" />
+
+
+    </LinearLayout>
+</RelativeLayout>

@@ -1,0 +1,170 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white"
+    android:gravity="center_horizontal"
+    android:orientation="vertical"
+    tools:context=".LoginActivity">
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="175dp"
+        android:scaleType="fitEnd"
+        android:scaleX=".7"
+        android:scaleY=".7"
+        android:src="@drawable/logo" />
+
+        <EditText
+            android:id="@+id/username"
+            android:layout_width="match_parent"
+            android:layout_height="44dp"
+            android:layout_marginLeft="25dp"
+            android:layout_marginTop="15dp"
+            android:layout_marginRight="25dp"
+            android:layout_marginBottom="8dp"
+            android:autofillHints=""
+            android:background="@drawable/rounded_edittext"
+            android:ems="10"
+            android:hint="@string/kullanici_ad"
+            android:inputType="textEmailAddress"
+            android:paddingLeft="10dp"
+            android:textColor="@color/black"
+            android:textColorHint="@color/hintColor"
+            android:topLeftRadius="20dp" />
+
+    <EditText
+        android:id="@+id/password"
+        android:layout_width="match_parent"
+        android:layout_height="44dp"
+        android:layout_marginLeft="25dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginRight="25dp"
+        android:layout_marginBottom="8dp"
+        android:autofillHints=""
+        android:background="@drawable/rounded_edittext"
+        android:ems="10"
+        android:hint="Şifre"
+        android:inputType="textPassword"
+        android:paddingLeft="10dp"
+        android:textColor="@color/black"
+        android:textColorHint="@color/hintColor" />
+
+    <Button
+        android:id="@+id/login"
+        android:layout_width="match_parent"
+        android:layout_height="44dp"
+        android:layout_marginLeft="25dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginRight="25dp"
+        android:layout_marginBottom="8dp"
+        android:background="@drawable/rounded_button"
+        android:paddingLeft="10dp"
+        android:text="Giriş Yap"
+        android:textColor="@color/white" />
+
+    <LinearLayout
+        android:layout_width="227dp"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="20dp"
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/textView2"
+            android:layout_width="40dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="right"
+            android:text="Sorun mu yaşıyorsun?"
+            android:textColor="@color/black"
+            android:visibility="visible" />
+
+        <Button
+            android:id="@+id/sifredegis"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="0dp"
+            android:background="@null"
+            android:padding="0dp"
+            android:text="Yardım Al"
+            android:textColor="@color/black"
+            android:textSize="12dp" />
+
+
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/textView4"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:text="Ya Da"
+        android:textColor="#FB5825"
+        android:textSize="25dp" />
+
+    <Button
+        android:id="@+id/mybuttonn"
+        android:layout_width="match_parent"
+        android:layout_height="44dp"
+        android:layout_marginLeft="25dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginRight="25dp"
+        android:layout_marginBottom="8dp"
+        android:background="@drawable/rounded_button"
+        android:paddingLeft="10dp"
+        android:text="Google ile Giriş Yap"
+        android:textColor="@color/white" />
+
+    </LinearLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:gravity="center_horizontal"
+        android:orientation="vertical">
+        <View
+            android:layout_width="wrap_content"
+            android:layout_height="3dp"
+            android:background="@color/turuncu" />
+    <LinearLayout
+        android:layout_width="227dp"
+        android:layout_height="wrap_content"
+        android:gravity="center_horizontal"
+        android:layout_marginLeft="20dp"
+        android:orientation="horizontal"
+        android:visibility="visible">
+
+
+        <TextView
+            android:id="@+id/kk"
+            android:layout_width="40dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:text="Hesabın yok mu?"
+            android:textColor="@color/black"
+            android:textSize="18dp"
+            android:visibility="visible"
+            />
+
+        <Button
+            android:id="@+id/register"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_margin="0dp"
+            android:background="@null"
+            android:padding="0dp"
+            android:text="Kayıt Ol"
+            android:textColor="@color/black"
+            android:textSize="18dp" />
+
+
+    </LinearLayout></LinearLayout>
+</RelativeLayout>
