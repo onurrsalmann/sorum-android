@@ -47,9 +47,6 @@ public class ProfilFragment extends Fragment {
         FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
 
         String uid = currentUser.getUid();
-
-
-
         final DocumentReference docRef = db.collection("users").document(uid);
         docRef.addSnapshotListener(new EventListener<DocumentSnapshot>() {
             @Override

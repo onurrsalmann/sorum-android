@@ -25,6 +25,12 @@ public class MainActivity extends AppCompatActivity {
             MainActivity.this.finish();
             startActivity(intent);
         }
+
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
         getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
                 new HomeFragment()).commit();
 
@@ -40,6 +46,7 @@ public class MainActivity extends AppCompatActivity {
             }
         });
     }
+
     private BottomNavigationView.OnNavigationItemSelectedListener navListener =
             new BottomNavigationView.OnNavigationItemSelectedListener() {
                 @Override
