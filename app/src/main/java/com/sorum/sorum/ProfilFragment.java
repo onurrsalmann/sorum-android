@@ -2,6 +2,7 @@ package com.sorum.sorum;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.provider.ContactsContract;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -16,6 +17,11 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
@@ -29,7 +35,7 @@ public class ProfilFragment extends Fragment {
     private Button ayarlar;
     private TextView name;
     private TextView username;
-    private TextView exam;
+    private TextView examm;
     private FirebaseAuth auth;
 
     @Nullable
@@ -41,30 +47,29 @@ public class ProfilFragment extends Fragment {
         ayarlar = v.findViewById(R.id.settings);
         name = v.findViewById(R.id.profile_name);
         username = v.findViewById(R.id.profile_username);
-        exam = v.findViewById(R.id.profile_exam);
+        examm= v.findViewById(R.id.profile_exam);
 
-        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        DatabaseReference db = FirebaseDatabase.getInstance().getReference();
         FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
 
         String uid = currentUser.getUid();
-        final DocumentReference docRef = db.collection("users").document(uid);
-        docRef.addSnapshotListener(new EventListener<DocumentSnapshot>() {
+        ValueEventListener veriler = new ValueEventListener() {
             @Override
-            public void onEvent(@Nullable DocumentSnapshot snapshot,
-                                @Nullable FirebaseFirestoreException e) {
-                if (e != null) {
-                    Log.w(TAG, "Listen failed.", e);
-                    return;
-                }
-                if (snapshot != null && snapshot.exists()) {
-                    name.setText(snapshot.getString("name"));
-                    username.setText(snapshot.getString("username"));
-                    exam.setText(snapshot.getString("exam"));
-                } else {
-                    Log.d(TAG, "Current data: null");
-                }
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                String namee =dataSnapshot.child("users").child(uid).child("name").getValue().toString();
+                String user =dataSnapshot.child("users").child(uid).child("username").getValue().toString();
+                String exam =dataSnapshot.child("users").child(uid).child("exam").getValue().toString();
+                name.setText(namee);
+                username.setText(user);
+                examm.setText(exam);
             }
-        });
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        };
+        db.addValueEventListener(veriler);
 
         logout.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -77,7 +82,6 @@ public class ProfilFragment extends Fragment {
                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
                 getActivity().finish();
                 startActivity(intent);
-
             }
         });
         ayarlar.setOnClickListener(new View.OnClickListener() {

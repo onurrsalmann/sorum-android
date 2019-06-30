@@ -24,6 +24,12 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
+import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
@@ -32,42 +38,18 @@ import com.google.firebase.firestore.FirebaseFirestoreException;
 
 import static android.support.constraint.Constraints.TAG;
 
-public class LoginActivity extends AppCompatActivity implements View.OnClickListener {
+public class LoginActivity extends AppCompatActivity {
 
     private static final String TAG = "Sorum";
-    private static final int RC_SIGN_IN = 9001;
-
-        // [START declare_auth]
-        private FirebaseAuth mAuth;
-        // [END declare_auth]
-        private GoogleSignInClient mGoogleSignInClient;
-
+    private FirebaseAuth mAuth;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
-
-        findViewById(R.id.mybuttonn).setOnClickListener(this);
-
-
-
-        GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-                .requestIdToken(getString(R.string.default_web_client_id))
-                .requestEmail()
-                .build();
-        // [END config_signin]
-
-        mGoogleSignInClient = GoogleSignIn.getClient(this, gso);
-
-        // [START initialize_auth]
-        // Initialize Firebase Auth
         mAuth = FirebaseAuth.getInstance();
-        // [END initialize_auth]
-
-
-
-
+        DatabaseReference rootRef = FirebaseDatabase.getInstance().getReference();
+        DatabaseReference animalsRef = rootRef.child("users");
 
 
         if (mAuth.getCurrentUser() != null) {
@@ -102,7 +84,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                 String pass = txtpass.getText().toString();
 
                 if (TextUtils.isEmpty(kadi)) {
-                    Toast.makeText(getApplicationContext(), "Lütfen emailinizi giriniz", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getApplicationContext(), "Lütfen kullanıcı adınızı giriniz giriniz", Toast.LENGTH_SHORT).show();
                     return;
                 }
                 if (TextUtils.isEmpty(pass)) {
@@ -110,132 +92,47 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                     return;
                 }
 
-                mAuth.signInWithEmailAndPassword(kadi, pass)
-                        .addOnCompleteListener(LoginActivity.this, new OnCompleteListener<AuthResult>() {
-                            @Override
-                            public void onComplete(@NonNull Task<AuthResult> task) {
-                                if (task.isSuccessful()) {
-                                    FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
-                                    updateUI(currentUser);
-                                    Toast.makeText(LoginActivity.this, "Giris Yapılıyor", Toast.LENGTH_LONG).show();
-                                    Intent intent = new Intent(LoginActivity.this, MainActivity.class);
-                                    intent.setFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
-                                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                                    LoginActivity.this.finish();
-                                    startActivity(intent);
+                ValueEventListener eventListener = new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        String search = kadi;
+                        Boolean found;
+                        for(DataSnapshot ds : dataSnapshot.getChildren()) {
+                            String movieName = ds.child("username").getValue(String.class);
+                            found = movieName.contains(search);
+                            if(found == true){
+                                Toast.makeText(LoginActivity.this, "Giris Yapılıyor", Toast.LENGTH_SHORT).show();
+                                String kadi = ds.child("email").getValue().toString();
+                                mAuth.signInWithEmailAndPassword(kadi, pass)
+                                        .addOnCompleteListener(LoginActivity.this, new OnCompleteListener<AuthResult>() {
+                                            @Override
+                                            public void onComplete(@NonNull Task<AuthResult> task) {
+                                                if (task.isSuccessful()) {
+                                                    FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
+                                                    Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+                                                    intent.setFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
+                                                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                                                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                                                    LoginActivity.this.finish();
+                                                    startActivity(intent);
 
-                                } else {
-                                    Toast.makeText(getApplicationContext(), task.getException().getMessage(), Toast.LENGTH_SHORT).show();
-                                }
+                                                } else {
+                                                    Toast.makeText(getApplicationContext(), task.getException().getMessage(), Toast.LENGTH_SHORT).show();
+                                                }
+                                            }
+                                        });
+                            }else{
+                                Toast.makeText(LoginActivity.this, "Kullanıcı adınız yanlış", Toast.LENGTH_SHORT).show();
                             }
-                        });
-
+                        }
+                    }
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {}
+                };
+                animalsRef.addListenerForSingleValueEvent(eventListener);
             }
         });
-
-
-// ...
-// Initialize Firebase Auth
     }
-
-    @Override
-    public void onClick(View v) {
-        int i = v.getId();
-        if (i == R.id.mybuttonn) {
-            signIn();
-        }
-    }
-
-    @Override
-    public void onStart() {
-        super.onStart();
-        // Check if user is signed in (non-null) and update UI accordingly.
-        FirebaseUser currentUser = mAuth.getCurrentUser();
-        updateUI(currentUser);
-    }
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-
-        // Result returned from launching the Intent from GoogleSignInApi.getSignInIntent(...);
-        if (requestCode == RC_SIGN_IN) {
-            Task<GoogleSignInAccount> task = GoogleSignIn.getSignedInAccountFromIntent(data);
-            try {
-                GoogleSignInAccount account = task.getResult(ApiException.class);
-                firebaseAuthWithGoogle(account);
-                FirebaseUser user = mAuth.getCurrentUser();
-                updateUI(user);
-                Toast.makeText(LoginActivity.this, "Giris Yapılıyor", Toast.LENGTH_SHORT).show();
-                Intent intent = new Intent(LoginActivity.this, MainActivity.class);
-                intent.setFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
-                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                LoginActivity.this.finish();
-                startActivity(intent);
-
-
-            } catch (ApiException e) {
-                // Google Sign In failed, update UI appropriately
-                Log.w(TAG, "Google sign in failed", e);
-                // [START_EXCLUDE]
-                updateUI(null);
-                // [END_EXCLUDE]
-            }
-        }
-    }
-    private void firebaseAuthWithGoogle(GoogleSignInAccount acct) {
-        Log.d(TAG, "firebaseAuthWithGoogle:" + acct.getId());
-        // [START_EXCLUDE silent]
-        AuthCredential credential = GoogleAuthProvider.getCredential(acct.getIdToken(), null);
-        mAuth.signInWithCredential(credential)
-                .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
-                    @Override
-                    public void onComplete(@NonNull Task<AuthResult> task) {
-                        if (task.isSuccessful()) {
-                            // Sign in success, update UI with the signed-in user's information
-                            Log.d(TAG, "signInWithCredential:success");
-                            FirebaseUser user = mAuth.getCurrentUser();
-                            updateUI(user);
-                        } else {
-                            // If sign in fails, display a message to the user.
-                            Log.w(TAG, "signInWithCredential:failure", task.getException());
-                            
-                            updateUI(null);
-                        }
-
-                        // [START_EXCLUDE]
-
-                        // [END_EXCLUDE]
-                    }
-                });
-    }
-
-
-    private void signIn() {
-        Intent signInIntent = mGoogleSignInClient.getSignInIntent();
-        startActivityForResult(signInIntent, RC_SIGN_IN);
-    }
-
-    private void updateUI(FirebaseUser user) {
-
-        if (user != null) {
-
-
-            findViewById(R.id.mybuttonn).setVisibility(View.GONE);
-
-        } else {
-
-
-
-            findViewById(R.id.mybuttonn).setVisibility(View.VISIBLE);
-
-        }
-    }
-
-
-
-   
 }
 
 

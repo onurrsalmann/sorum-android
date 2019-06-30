@@ -17,15 +17,15 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.firestore.DocumentReference;
-import com.google.firebase.firestore.FirebaseFirestore;
-
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 import java.util.HashMap;
 import java.util.Map;
 
 public class RegisterActivity extends AppCompatActivity {
 
     private FirebaseAuth auth;
+    private DatabaseReference mDatabase;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,7 +33,14 @@ public class RegisterActivity extends AppCompatActivity {
         setContentView(R.layout.activity_register);
 
         auth=FirebaseAuth.getInstance();
-        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        mDatabase = FirebaseDatabase.getInstance().getReference();
+
+/*
+        Map<String, Object> useri = new HashMap<>();
+        useri.put("soru1","soruumm");
+        useri.put("cevap1", "cevabımm");
+
+        mDatabase.child("exams").child("TYT").child("Matematik Soruları").child("Deneme1").setValue(useri);*/
 
         Button login = (Button) this.findViewById(R.id.login);
         final EditText txtkadi = (EditText) this.findViewById(R.id.username);
@@ -81,25 +88,21 @@ public class RegisterActivity extends AppCompatActivity {
                     return;
                 }
 
+
                 auth.createUserWithEmailAndPassword(email,pass)
                         .addOnCompleteListener(RegisterActivity.this, new OnCompleteListener<AuthResult>() {
                             @Override
                             public void onComplete(@NonNull Task<AuthResult> task) {
-
-                                //İşlem başarısız olursa kullanıcıya bir Toast mesajıyla bildiriyoruz.
                                 if (!task.isSuccessful()) {
                                     Toast.makeText(RegisterActivity.this, "Yetkilendirme Hatası",
                                             Toast.LENGTH_SHORT).show();
                                 }
-
-                                //İşlem başarılı olduğu takdir de giriş yapılıp MainActivity e yönlendiriyoruz.
                                 else {
                                     Map<String, Object> user = new HashMap<>();
                                     user.put("username", kadi);
                                     user.put("email", email);
 
-                                    db.collection("users").document(auth.getCurrentUser().getUid())
-                                            .set(user)
+                                    mDatabase.child("users").child(auth.getCurrentUser().getUid()).setValue(user)
                                             .addOnSuccessListener(new OnSuccessListener<Void>() {
                                                 @Override
                                                 public void onSuccess(Void aVoid) {
@@ -115,6 +118,7 @@ public class RegisterActivity extends AppCompatActivity {
                                                 @Override
                                                 public void onFailure(@NonNull Exception e) {
                                                     Log.w("TAG", "Error writing document", e);
+                                                    Log.w("TAG", "Yazdırılamadı", e);
                                                 }
                                             });
                                 }

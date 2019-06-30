@@ -14,29 +14,24 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.Toast;
 
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.firestore.CollectionReference;
-import com.google.firebase.firestore.DocumentReference;
-import com.google.firebase.firestore.DocumentSnapshot;
-import com.google.firebase.firestore.EventListener;
-import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.FirebaseFirestoreException;
-import com.google.firebase.firestore.QueryDocumentSnapshot;
-import com.google.firebase.firestore.QuerySnapshot;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
-import java.util.List;
 
 import static android.support.constraint.Constraints.TAG;
 
 public class DenemeFragment extends Fragment {
-    private ArrayAdapter adapter;
-    private ListView list;
-    private final ArrayList<String> test = new ArrayList<>();
+
+    ArrayList<exam> tarifList;
+    FirebaseDatabase database;
+    private ListView listView;
+    private DatabaseReference mPostReference;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -48,41 +43,61 @@ public class DenemeFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_deneme, container, false);
 
-        list = v.findViewById(R.id.test_list);
-        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        tarifList=new ArrayList<exam>();
+
+        listView = (ListView) v.findViewById(R.id.listView);
+        database = FirebaseDatabase.getInstance();
+        final DatabaseReference dbRef=database.getReference("exams");
         FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
         String uid = currentUser.getUid();
-        final DocumentReference docRef = db.collection("users").document(uid);
-        docRef.addSnapshotListener(new EventListener<DocumentSnapshot>() {
-            @Override
-            public void onEvent(@Nullable DocumentSnapshot snapshot,
-                                @Nullable FirebaseFirestoreException e) {
-                if (e != null) {
-                    Log.w(TAG, "Listen failed.", e);
-                    return;
-                }
-                if (snapshot != null && snapshot.exists()) {
-                    String exam = snapshot.getString("exam");
+        mPostReference = database.getReference("users").child(uid).child("exam");
 
-                    db.collection("deneme").document(exam).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-                        @Override
-                        public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                            DocumentSnapshot document = task.getResult();
-                            if(document.get(exam) != null) {
-                                List<String> firelist = (List<String>) document.get(exam);
-                                for (String item : firelist) {
-                                    test.add(item);
-                                    adapter = new ArrayAdapter(getActivity() ,R.layout.test_list_item, test);
-                                    list.setAdapter(adapter);
-                                }
-                            }
-                        }
-                    });
-                } else {
-                    Log.d(TAG, "Current data: null");
-                }
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Log.d("TAG", "tiklandi: "+tarifList);
             }
         });
+
+
+        ValueEventListener postListener = new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                if (dataSnapshot.getValue() != null) {
+                    String exam = dataSnapshot.getValue().toString();
+                    dbRef.child(exam).addValueEventListener(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(DataSnapshot dataSnapshot) {
+                            for (DataSnapshot ds:dataSnapshot.getChildren()){
+                                String isim=ds.getKey();
+                                tarifList.add(new exam(isim));
+                            }
+                            CustomAdapter adapter =new CustomAdapter(getActivity(),tarifList);
+                            listView.setAdapter(adapter);
+                            dbRef.removeEventListener(this);}
+                        @Override
+                        public void onCancelled(DatabaseError databaseError) {
+
+                        }
+                    });
+                }else{
+                    Intent ntent =new Intent(getContext(), RegisterTwoActivity.class);///İntent ouşturup 2. activity'e gideceğini belirledik.
+                    ntent.setFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
+                    ntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                    ntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                    getActivity().finish();
+                    startActivity(ntent);
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                // Getting Post failed, log a message
+                Log.w(TAG, "loadPost:onCancelled", databaseError.toException());
+                // ...
+            }
+        };
+        mPostReference.addValueEventListener(postListener);
 
         return v;
     }
