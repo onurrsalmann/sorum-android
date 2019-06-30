@@ -12,7 +12,6 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
-import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -28,7 +27,7 @@ import static android.support.constraint.Constraints.TAG;
 
 public class DenemeFragment extends Fragment {
 
-    ArrayList<exam> tarifList;
+    private ArrayList<String> deneme_baslik;
     FirebaseDatabase database;
     private ListView listView;
     private DatabaseReference mPostReference;
@@ -42,10 +41,10 @@ public class DenemeFragment extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_deneme, container, false);
-
-        tarifList=new ArrayList<exam>();
+        deneme_baslik =new ArrayList<String>();
 
         listView = (ListView) v.findViewById(R.id.listView);
+
         database = FirebaseDatabase.getInstance();
         final DatabaseReference dbRef=database.getReference("exams");
         FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
@@ -55,11 +54,10 @@ public class DenemeFragment extends Fragment {
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                CustomAdapter adapter =new CustomAdapter(getActivity(),tarifList);
-                Log.d("TAG", "tiklandi: "+adapter.getItem(position) );
+
+                Log.d("TAG", "tiklandi: "+deneme_baslik.get(position));
             }
         });
-
 
         ValueEventListener postListener = new ValueEventListener() {
             @Override
@@ -69,12 +67,13 @@ public class DenemeFragment extends Fragment {
                     dbRef.child(exam).addValueEventListener(new ValueEventListener() {
                         @Override
                         public void onDataChange(DataSnapshot dataSnapshot) {
-                            tarifList.clear();
+                            deneme_baslik.clear();
                             for (DataSnapshot ds:dataSnapshot.getChildren()){
                                 String isim=ds.getKey();
-                                tarifList.add(new exam(isim));
+                                deneme_baslik.add(isim);
                             }
-                            CustomAdapter adapter =new CustomAdapter(getActivity(),tarifList);
+                            Log.d("TAG", "salan: "+deneme_baslik);
+                            ArrayAdapter<String> adapter = new ArrayAdapter<String>(getActivity(), R.layout.listview_text, deneme_baslik);
                             listView.setAdapter(adapter);
                             dbRef.removeEventListener(this);}
                         @Override
@@ -94,9 +93,7 @@ public class DenemeFragment extends Fragment {
 
             @Override
             public void onCancelled(DatabaseError databaseError) {
-                // Getting Post failed, log a message
                 Log.w(TAG, "loadPost:onCancelled", databaseError.toException());
-                // ...
             }
         };
         mPostReference.addValueEventListener(postListener);

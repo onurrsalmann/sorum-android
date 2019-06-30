@@ -142,6 +142,7 @@ public class AyarlarActivity extends AppCompatActivity {
                     username.setText(dbusername);
                     sinav.add(dbexam);
                     secilenSinav = dbexam;
+                    db.removeEventListener(this);
                 }
 
                 @Override
@@ -196,42 +197,68 @@ public class AyarlarActivity extends AppCompatActivity {
                         public void onDataChange(DataSnapshot dataSnapshot) {
                             String search = username_string;
                             Boolean found;
+                            Boolean found_sonuc = false;
                             for(DataSnapshot ds : dataSnapshot.getChildren()) {
                                 String movieName = ds.child("username").getValue(String.class);
                                 found = movieName.contains(search);
                                 if(found.equals(true)){
+                                    found_sonuc = true;
                                     Log.d("TAG", "burdamm: "+found+" sasa:"+movieName+" sasasa: "+search);
                                     Toast.makeText(AyarlarActivity.this, "Bu kullanıcı adı kullanılamaz", Toast.LENGTH_SHORT).show();
                                     return;
                                 }
+                            }
+                            if(found_sonuc.equals(false)){
+                                Log.d("Tag", secilenSinav);
+                                Map<String, Object> userr = new HashMap<>();
+                                userr.put("name", name_string);
+                                userr.put("username", username_string);
+                                userr.put("exam", secilenSinav);
+
+
+                                db.child("users").child(auth.getCurrentUser().getUid()).updateChildren(userr)
+                                        .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                            @Override
+                                            public void onSuccess(Void aVoid) {
+                                                Log.d("Succes", "basarılı");
+                                            }
+                                        })
+                                        .addOnFailureListener(new OnFailureListener() {
+                                            @Override
+                                            public void onFailure(@NonNull Exception e) {
+                                                Log.w("TAG", "Error writing document", e);
+                                                Log.w("TAG", "Yazdırılamadı", e);
+                                            }
+                                        });
                             }
                         }
                         @Override
                         public void onCancelled(DatabaseError databaseError) {}
                     };
                     animalsRef.addListenerForSingleValueEvent(eventListener);
+                }else{
+                    Log.d("Tag", secilenSinav);
+                    Map<String, Object> userr = new HashMap<>();
+                    userr.put("name", name_string);
+                    userr.put("username", username_string);
+                    userr.put("exam", secilenSinav);
+
+
+                    db.child("users").child(auth.getCurrentUser().getUid()).updateChildren(userr)
+                            .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                @Override
+                                public void onSuccess(Void aVoid) {
+                                    Log.d("Succes", "basarılı");
+                                }
+                            })
+                            .addOnFailureListener(new OnFailureListener() {
+                                @Override
+                                public void onFailure(@NonNull Exception e) {
+                                    Log.w("TAG", "Error writing document", e);
+                                    Log.w("TAG", "Yazdırılamadı", e);
+                                }
+                            });
                 }
-                Log.d("Tag", secilenSinav);
-                Map<String, Object> userr = new HashMap<>();
-                userr.put("name", name_string);
-                userr.put("username", username_string);
-                userr.put("exam", secilenSinav);
-
-
-                db.child("users").child(auth.getCurrentUser().getUid()).updateChildren(userr)
-                        .addOnSuccessListener(new OnSuccessListener<Void>() {
-                            @Override
-                            public void onSuccess(Void aVoid) {
-                                Log.d("Succes", "basarılı");
-                            }
-                        })
-                        .addOnFailureListener(new OnFailureListener() {
-                            @Override
-                            public void onFailure(@NonNull Exception e) {
-                                Log.w("TAG", "Error writing document", e);
-                                Log.w("TAG", "Yazdırılamadı", e);
-                            }
-                        });
             }
         });
     }
