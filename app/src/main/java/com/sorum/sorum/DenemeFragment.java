@@ -55,7 +55,8 @@ public class DenemeFragment extends Fragment {
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Log.d("TAG", "tiklandi: "+tarifList);
+                CustomAdapter adapter =new CustomAdapter(getActivity(),tarifList);
+                Log.d("TAG", "tiklandi: "+adapter.getItem(position) );
             }
         });
 
@@ -68,6 +69,7 @@ public class DenemeFragment extends Fragment {
                     dbRef.child(exam).addValueEventListener(new ValueEventListener() {
                         @Override
                         public void onDataChange(DataSnapshot dataSnapshot) {
+                            tarifList.clear();
                             for (DataSnapshot ds:dataSnapshot.getChildren()){
                                 String isim=ds.getKey();
                                 tarifList.add(new exam(isim));
