@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:background="@color/white"
+    android:orientation="vertical">
+    <TextView xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:id="@+id/deneme_two_baslik"
+        android:textSize="35sp"
+        android:textStyle="bold"
+        android:textColor="@color/turuncu"
+        android:textColorHint="@color/turuncu"
+        android:textAlignment="center"
+        android:gravity="center"
+        android:text="... Denemeleri">
+    </TextView>
+    <ListView
+        android:id="@+id/listViewtwo"
+        android:layout_width="match_parent"
+        android:textColor="@color/black"
+        android:layout_height="match_parent" />
+</LinearLayout>

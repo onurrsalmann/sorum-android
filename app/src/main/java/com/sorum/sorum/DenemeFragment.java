@@ -1,11 +1,11 @@
 package com.sorum.sorum;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.util.Log;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,8 +13,6 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -23,82 +21,55 @@ import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 
-import static android.support.constraint.Constraints.TAG;
-
 public class DenemeFragment extends Fragment {
 
+    private String exam;
     private ArrayList<String> deneme_baslik;
     FirebaseDatabase database;
     private ListView listView;
-    private DatabaseReference mPostReference;
-
-    @Override
-    public void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-    }
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_deneme, container, false);
         deneme_baslik =new ArrayList<String>();
-
+        Bundle bundle = getArguments();
+        exam = bundle.getString("exam");
         listView = (ListView) v.findViewById(R.id.listView);
-
         database = FirebaseDatabase.getInstance();
         final DatabaseReference dbRef=database.getReference("exams");
-        FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
-        String uid = currentUser.getUid();
-        mPostReference = database.getReference("users").child(uid).child("exam");
 
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 
-                Log.d("TAG", "tiklandi: "+deneme_baslik.get(position));
+                Bundle bundle = new Bundle();
+                bundle.putString("examname",deneme_baslik.get(position));
+                bundle.putString("exam", exam);
+
+                FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
+                FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+                DenemeTwoFragment denemeTwoFragment = new DenemeTwoFragment() ;
+                denemeTwoFragment.setArguments(bundle);
+
+                fragmentTransaction.replace(R.id.fragment_container, denemeTwoFragment);
+                fragmentTransaction.commit();
             }
         });
-
-        ValueEventListener postListener = new ValueEventListener() {
+        dbRef.child(exam).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                if (dataSnapshot.getValue() != null) {
-                    String exam = dataSnapshot.getValue().toString();
-                    dbRef.child(exam).addValueEventListener(new ValueEventListener() {
-                        @Override
-                        public void onDataChange(DataSnapshot dataSnapshot) {
-                            deneme_baslik.clear();
-                            for (DataSnapshot ds:dataSnapshot.getChildren()){
-                                String isim=ds.getKey();
-                                deneme_baslik.add(isim);
-                            }
-                            Log.d("TAG", "salan: "+deneme_baslik);
-                            ArrayAdapter<String> adapter = new ArrayAdapter<String>(getActivity(), R.layout.listview_text, deneme_baslik);
-                            listView.setAdapter(adapter);
-                            dbRef.removeEventListener(this);}
-                        @Override
-                        public void onCancelled(DatabaseError databaseError) {
-
-                        }
-                    });
-                }else{
-                    Intent ntent =new Intent(getContext(), RegisterTwoActivity.class);///İntent ouşturup 2. activity'e gideceğini belirledik.
-                    ntent.setFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
-                    ntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                    ntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                    getActivity().finish();
-                    startActivity(ntent);
+                deneme_baslik.clear();
+                for (DataSnapshot ds:dataSnapshot.getChildren()){
+                    String isim=ds.getKey();
+                    deneme_baslik.add(isim);
                 }
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-                Log.w(TAG, "loadPost:onCancelled", databaseError.toException());
-            }
-        };
-        mPostReference.addValueEventListener(postListener);
-
+                ArrayAdapter<String> adapter = new ArrayAdapter<String>(getActivity(), R.layout.listview_text, deneme_baslik);
+                listView.setAdapter(adapter);
+                dbRef.removeEventListener(this);}
+                @Override
+                public void onCancelled(DatabaseError databaseError) { }
+        });
         return v;
     }
-
 }

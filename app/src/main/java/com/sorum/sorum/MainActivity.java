@@ -1,85 +1,156 @@
 package com.sorum.sorum;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
-import android.os.Build;
+import android.graphics.Color;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v4.app.Fragment;
-import android.support.v4.content.ContextCompat;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.Window;
-import android.view.WindowManager;
+import android.widget.ArrayAdapter;
 import android.widget.ImageButton;
+import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
-import static android.support.constraint.Constraints.TAG;
+import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity {
-    private FirebaseAuth mAuth;
-    FirebaseDatabase database;
-    Context context;
-    private DatabaseReference mPostReference;
 
+    private DatabaseReference mPostReference;
+    private ArrayAdapter<String> question_names;
+    private Boolean question_names_selected = false;
+    private String question_name;
+    private String exam ;
+    private String name;
+    private String username;
+    LinearLayout linearLayout;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        Window window = getWindow();
-        window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN);
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT_WATCH) {
-            window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
-            window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
-            window.setStatusBarColor(getResources().getColor(R.color.colorPrimary));
-        }
 
-        mAuth = FirebaseAuth.getInstance();
-        database = FirebaseDatabase.getInstance();
-        if (mAuth.getCurrentUser() == null) {
+        question_names = new ArrayAdapter<String>(MainActivity.this, R.layout.question_select);
+        DatabaseReference db = FirebaseDatabase.getInstance().getReference();
+        DatabaseReference dbrun = FirebaseDatabase.getInstance().getReference("users");
+        DatabaseReference dbRef = db.child("questions");
+        FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
+        if (currentUser == null) {
             Intent intent = new Intent(MainActivity.this, LoginActivity.class);
             MainActivity.this.finish();
             startActivity(intent);
         }else{
-            ValueEventListener postListener = new ValueEventListener() {
+            String uid = currentUser.getUid();
+            mPostReference = db.child("users").child(uid).child("exam");
+            dbRef.child("AYT").addValueEventListener(new ValueEventListener() {
                 @Override
                 public void onDataChange(DataSnapshot dataSnapshot) {
-                    if (dataSnapshot.getValue() == null) {
-                        Intent ntent =new Intent(MainActivity.this, RegisterTwoActivity.class);///İntent ouşturup 2. activity'e gideceğini belirledik.
-                        ntent.setFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
-                        ntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                        ntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                        MainActivity.this.finish();
-                        startActivity(ntent);
+                    question_names.clear();
+                    for (DataSnapshot ds:dataSnapshot.getChildren()){
+                        String isim=ds.getKey();
+                        question_names.add(isim);
                     }
-                }
-
+                    dbRef.removeEventListener(this);}
                 @Override
-                public void onCancelled(DatabaseError databaseError) {
-                    // Getting Post failed, log a message
-                    Log.w(TAG, "loadPost:onCancelled", databaseError.toException());
-                    // ...
+                public void onCancelled(DatabaseError databaseError) { }
+            });
+
+            ValueEventListener veriler = new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                    String dbname =dataSnapshot.child(uid).child("name").getValue().toString();
+                    String dbusername =dataSnapshot.child(uid).child("username").getValue().toString();
+                    String dbexam =dataSnapshot.child(uid).child("exam").getValue().toString();
+                    name = dbname;
+                    username = dbusername;
+                    exam = dbexam;
                 }
+                @Override
+                public void onCancelled(@NonNull DatabaseError databaseError) { }
             };
-            mPostReference = database.getReference("users").child(mAuth.getCurrentUser().getUid()).child("exam");
-            mPostReference.addValueEventListener(postListener);
+            dbrun.addValueEventListener(veriler);
         }
     }
-
     @Override
     protected void onStart() {
         super.onStart();
-        getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
-                new HomeFragment()).commit();
+        FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
+        DatabaseReference dbrun = FirebaseDatabase.getInstance().getReference("users");
+        String uid = currentUser.getUid();
+
+        if(question_names_selected.equals(false)){
+            AlertDialog.Builder uyari = new AlertDialog.Builder(MainActivity.this);
+            TextView title = new TextView(MainActivity.this);
+            title.setText("Çözmek İstediğiniz Dersi Seçin");
+            title.setPadding(10, 30, 10, 15);
+            title.setGravity(Gravity.CENTER);
+            title.setTextColor(Color.BLACK);
+            title.setTextSize(20);
+            uyari.setCancelable(false);
+            uyari.setCustomTitle(title);
+            uyari.setAdapter(question_names, new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    ValueEventListener veriler = new ValueEventListener() {
+                        @Override
+                        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                            question_name = question_names.getItem(which);
+                            question_names_selected=true;
+                            String dbname =dataSnapshot.child(uid).child("name").getValue().toString();
+                            String dbusername =dataSnapshot.child(uid).child("username").getValue().toString();
+                            String dbexam =dataSnapshot.child(uid).child("exam").getValue().toString();
+                            name = dbname;
+                            username = dbusername;
+                            exam = dbexam;
+
+                            ArrayList<String> underlying = new ArrayList<String>();
+                            for (int i = 0; i < question_names.getCount(); i++)
+                                underlying .add(question_names.getItem(i));
+                            Fragment home = new HomeFragment();
+                            Bundle bundle = new Bundle();
+                            bundle.putString("name", name);
+                            bundle.putInt("question_name_which", which);
+                            bundle.putString("exam", exam);
+                            bundle.putString("username", username);
+                            bundle.putString("question_name", question_name);
+                            bundle.putStringArrayList("question_names", underlying);
+                            home.setArguments(bundle);
+                            getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
+                                    home).commit();
+                            dialog.dismiss();
+                            dbrun.removeEventListener(this);
+                        }
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError databaseError) { }
+                    };
+                    dbrun.addValueEventListener(veriler);
+                }
+            });
+            AlertDialog dialog = uyari.create();
+            if(isNetworkAvailable() == true){
+                dialog.show();
+            }else{
+                exam = "exam";
+                name = "name";
+                username = "username";
+            }
+        }
 
         BottomNavigationView bottomnav = findViewById(R.id.bottom_navigation);
         bottomnav.setOnNavigationItemSelectedListener(navListener);
@@ -93,12 +164,27 @@ public class MainActivity extends AppCompatActivity {
             }
         });
     }
+    private boolean isNetworkAvailable() {
+        ConnectivityManager connectivityManager
+                = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
+        return activeNetworkInfo != null && activeNetworkInfo.isConnected();
+    }
 
     private BottomNavigationView.OnNavigationItemSelectedListener navListener =
             new BottomNavigationView.OnNavigationItemSelectedListener() {
                 @Override
                 public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
+                    ArrayList<String> underlying = new ArrayList<String>();
+                    for (int i = 0; i < question_names.getCount(); i++)
+                        underlying .add(question_names.getItem(i));
                     Fragment selectedFragment = null;
+                    Bundle bundle = new Bundle();
+                    bundle.putString("name", name);
+                    bundle.putString("exam", exam);
+                    bundle.putString("username", username);
+                    bundle.putString("question_name", question_name);
+                    bundle.putStringArrayList("question_names", underlying);
 
                     switch (menuItem.getItemId()) {
                         case R.id.nav_home:
@@ -114,11 +200,10 @@ public class MainActivity extends AppCompatActivity {
                             selectedFragment = new ProfilFragment();
                             break;
                     }
+                    selectedFragment.setArguments(bundle);
                     getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
                             selectedFragment).commit();
                     return true;
                 }
             };
-
-
 }

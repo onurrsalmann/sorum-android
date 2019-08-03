@@ -38,6 +38,7 @@
             android:layout_marginBottom="8dp"
             android:background="@drawable/rounded_edittext"
             android:ems="10"
+            android:lines="1"
             android:hint="Adınız"
             android:inputType="textPersonName"
             android:paddingLeft="10dp"

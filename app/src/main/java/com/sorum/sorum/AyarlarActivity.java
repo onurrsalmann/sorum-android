@@ -200,7 +200,7 @@ public class AyarlarActivity extends AppCompatActivity {
                             Boolean found_sonuc = false;
                             for(DataSnapshot ds : dataSnapshot.getChildren()) {
                                 String movieName = ds.child("username").getValue(String.class);
-                                found = movieName.contains(search);
+                                found = movieName.equals(search);
                                 if(found.equals(true)){
                                     found_sonuc = true;
                                     Log.d("TAG", "burdamm: "+found+" sasa:"+movieName+" sasasa: "+search);
