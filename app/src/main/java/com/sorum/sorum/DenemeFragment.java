@@ -1,11 +1,16 @@
 package com.sorum.sorum;
 
+import android.content.Context;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -25,51 +30,24 @@ public class DenemeFragment extends Fragment {
 
     private String exam;
     private ArrayList<String> deneme_baslik;
-    FirebaseDatabase database;
-    private ListView listView;
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_deneme, container, false);
-        deneme_baslik =new ArrayList<String>();
         Bundle bundle = getArguments();
+        Context context =  getContext();
+        SQliteHelper sqlitedb = new SQliteHelper(context);
         exam = bundle.getString("exam");
-        listView = (ListView) v.findViewById(R.id.listView);
-        database = FirebaseDatabase.getInstance();
-        final DatabaseReference dbRef=database.getReference("exams");
-
-        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-
-                Bundle bundle = new Bundle();
-                bundle.putString("examname",deneme_baslik.get(position));
-                bundle.putString("exam", exam);
-
-                FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
-                FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-                DenemeTwoFragment denemeTwoFragment = new DenemeTwoFragment() ;
-                denemeTwoFragment.setArguments(bundle);
-
-                fragmentTransaction.replace(R.id.fragment_container, denemeTwoFragment);
-                fragmentTransaction.commit();
-            }
-        });
-        dbRef.child(exam).addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                deneme_baslik.clear();
-                for (DataSnapshot ds:dataSnapshot.getChildren()){
-                    String isim=ds.getKey();
-                    deneme_baslik.add(isim);
-                }
-                ArrayAdapter<String> adapter = new ArrayAdapter<String>(getActivity(), R.layout.listview_text, deneme_baslik);
-                listView.setAdapter(adapter);
-                dbRef.removeEventListener(this);}
-                @Override
-                public void onCancelled(DatabaseError databaseError) { }
-        });
+        sqlitedb.onUpgrade(sqlitedb.getWritableDatabase(),1,2);
+        deneme_baslik = sqlitedb.getExam();
+        initRecyclerView(v);
         return v;
+    }
+    private void initRecyclerView(View v){
+        RecyclerView recyclerView = v.findViewById(R.id.recyclerList);
+        ExamRecyclerViewAdapter adapter = new ExamRecyclerViewAdapter(deneme_baslik,exam);
+        recyclerView.setAdapter(adapter);
+        recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
     }
 }

@@ -2,15 +2,17 @@ package com.sorum.sorum;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.design.widget.TabLayout;
-import android.support.v4.app.Fragment;
-import android.support.v4.view.ViewPager;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import com.google.android.material.tabs.TabLayout;
+import androidx.fragment.app.Fragment;
+import androidx.viewpager.widget.ViewPager;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
+import android.view.WindowManager;
 
 import java.util.ArrayList;
 
@@ -28,6 +30,7 @@ public class HomeFragment extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_home, container, false);
+
         Bundle bundle = getArguments();
         name = bundle.getString("name");
         exam = bundle.getString("exam");
@@ -47,6 +50,7 @@ public class HomeFragment extends Fragment {
 
         if (question_names != null){
             tab = v.findViewById(R.id.tabs);
+            Log.d("salman", "burda");
             viewPager = v.findViewById(R.id.frameLayout);
             for (int k = 0; k <question_names.size(); k++) {
                 tab.addTab(tab.newTab().setText("" + question_names.get(k)));
@@ -81,5 +85,7 @@ public class HomeFragment extends Fragment {
         }
         return v;
     }
+
+
 
 }

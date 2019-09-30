@@ -1,47 +1,87 @@
 package com.sorum.sorum;
 
-import com.google.firebase.database.Exclude;
-import com.google.firebase.database.IgnoreExtraProperties;
-
-import java.util.HashMap;
-import java.util.Map;
-
-// [START post_class]
-@IgnoreExtraProperties
 public class Post {
+    private String soruId;
+    private String soru;
+    private String cevapA;
+    private String cevapB;
+    private String cevapC;
+    private String cevapD;
+    private String cevapE;
+    private String dogruCevap;
 
-    public String uid;
-    public String author;
-    public String title;
-    public String body;
-    public int starCount = 0;
-    public Map<String, Boolean> stars = new HashMap<>();
-
-    public Post() {
-        // Default constructor required for calls to DataSnapshot.getValue(Post.class)
+    public Post(String soruId, String soru, String cevapA, String cevapB, String cevapC, String cevapD, String cevapE, String dogruCevap) {
+        this.soruId = soruId;
+        this.soru = soru;
+        this.cevapA = cevapA;
+        this.cevapB = cevapB;
+        this.cevapC = cevapC;
+        this.cevapD = cevapD;
+        this.cevapE = cevapE;
+        this.dogruCevap = dogruCevap;
     }
 
-    public Post(String uid, String author, String title, String body) {
-        this.uid = uid;
-        this.author = author;
-        this.title = title;
-        this.body = body;
+    public String getSoruId() {
+        return soruId;
     }
 
-    // [START post_to_map]
-    @Exclude
-    public Map<String, Object> toMap() {
-        HashMap<String, Object> result = new HashMap<>();
-        result.put("uid", uid);
-        result.put("author", author);
-        result.put("title", title);
-        result.put("body", body);
-        result.put("starCount", starCount);
-        result.put("stars", stars);
-
-        return result;
+    public void setSoruId(String soruId) {
+        this.soruId = soruId;
     }
-    // [END post_to_map]
 
+    public String getSoru() {
+        return soru;
+    }
+
+    public void setSoru(String soru) {
+        this.soru = soru;
+    }
+
+    public String getCevapA() {
+        return cevapA;
+    }
+
+    public void setCevapA(String cevapA) {
+        this.cevapA = cevapA;
+    }
+
+    public String getCevapB() {
+        return cevapB;
+    }
+
+    public void setCevapB(String cevapB) {
+        this.cevapB = cevapB;
+    }
+
+    public String getCevapC() {
+        return cevapC;
+    }
+
+    public void setCevapC(String cevapC) {
+        this.cevapC = cevapC;
+    }
+
+    public String getCevapD() {
+        return cevapD;
+    }
+
+    public void setCevapD(String cevapD) {
+        this.cevapD = cevapD;
+    }
+
+    public String getCevapE() {
+        return cevapE;
+    }
+
+    public void setCevapE(String cevapE) {
+        this.cevapE = cevapE;
+    }
+
+    public String getDogruCevap() {
+        return dogruCevap;
+    }
+
+    public void setDogruCevap(String dogruCevap) {
+        this.dogruCevap = dogruCevap;
+    }
 }
-// [END post_class]

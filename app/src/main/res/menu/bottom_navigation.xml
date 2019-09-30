@@ -3,21 +3,21 @@
     <item
         android:id="@+id/nav_home"
         android:icon="@drawable/home"
-        android:title=""
+        android:title="Ana Sayfa"
     />
     <item
         android:id="@+id/nav_search"
         android:icon="@drawable/search"
-        android:title=""
+        android:title="Ara"
         />
     <item
         android:id="@+id/nav_deneme"
         android:icon="@drawable/deneme"
-        android:title=""/>
+        android:title="Denemeler"/>
     <item
         android:id="@+id/nav_profil"
         android:icon="@drawable/profil"
-        android:title=""/>
+        android:title="Profil"/>
 
 
 </menu>

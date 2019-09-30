@@ -4,7 +4,11 @@
     android:layout_height="match_parent">
 
     <TextView
+        android:layout_marginTop="5dp"
+        android:layout_marginRight="8dp"
         android:id="@+id/question_textview"
+        android:textSize="22sp"
+        android:textColor="@color/black"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="TextView" />
@@ -50,10 +54,15 @@
             android:text="E" />
     </RadioGroup>
     <Button
+        android:id="@+id/questionNext"
         android:layout_width="wrap_content"
-        android:layout_height="40dp"
+        android:padding="2dp"
+        android:layout_height="35dp"
         android:background="@drawable/border_button"
         android:textColor="@color/turuncu"
+        android:layout_centerHorizontal="true"
+        android:textSize="15dp"
         android:text="Devam Et"
+        android:layout_marginTop="15dp"
         android:layout_below="@+id/optionBlock"/>
 </RelativeLayout>

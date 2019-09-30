@@ -3,142 +3,143 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="vertical">
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
     android:background="@color/white"
-    android:orientation="vertical"
-    tools:context=".RegisterActivity"
-    android:gravity="center_horizontal">
-    <ImageView
-        android:layout_width="wrap_content"
-        android:layout_height="175dp"
-        android:scaleType="fitEnd"
-        android:scaleX=".7"
-        android:scaleY=".7"
-        android:src="@drawable/logo" />
-
-    <EditText
-        android:id="@+id/username"
+    android:gravity="center_horizontal"
+    android:orientation="vertical">
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
-        android:layout_height="45dp"
-        android:layout_marginLeft="25dp"
-        android:layout_marginTop="15dp"
-        android:layout_marginRight="25dp"
-        android:layout_marginBottom="8dp"
-        android:background="@drawable/rounded_edittext"
-        android:lines="1"
-        android:ems="10"
-        android:hint="Kullanıcı Adı"
-        android:inputType="textPersonName"
-        android:paddingLeft="10dp"
-        android:textColor="@color/black"
-        android:textColorHint="@color/hintColor"
-        android:topLeftRadius="20dp" />
-    <EditText
-        android:id="@+id/password"
-        android:layout_width="match_parent"
-        android:layout_height="45dp"
-        android:layout_marginLeft="25dp"
-        android:layout_marginTop="10dp"
-        android:layout_marginRight="25dp"
-        android:layout_marginBottom="8dp"
-        android:autofillHints=""
-        android:background="@drawable/rounded_edittext"
-        android:ems="10"
-        android:hint="Şifre"
-        android:inputType="textPassword"
-        android:paddingLeft="10dp"
-        android:lines="1"
-        android:textColor="@color/black"
-        android:textColorHint="@color/hintColor" />
-
-    <EditText
-        android:id="@+id/repassword"
-        android:layout_width="match_parent"
-        android:layout_height="45dp"
-        android:layout_marginLeft="25dp"
-        android:lines="1"
-        android:layout_marginTop="10dp"
-        android:layout_marginRight="25dp"
-        android:layout_marginBottom="8dp"
-        android:autofillHints=""
-        android:background="@drawable/rounded_edittext"
-        android:ems="10"
-        android:hint="Şifre (Tekrar)"
-        android:inputType="textPassword"
-        android:paddingLeft="10dp"
-        android:textColor="@color/black"
-        android:textColorHint="@color/hintColor" />
-
-    <EditText
-        android:id="@+id/email"
-        android:layout_width="match_parent"
-        android:layout_height="45dp"
-        android:layout_marginLeft="25dp"
-        android:layout_marginTop="8dp"
-        android:lines="1"
-        android:layout_marginRight="25dp"
-        android:layout_marginBottom="8dp"
-        android:autofillHints=""
-        android:background="@drawable/rounded_edittext"
-        android:ems="10"
-        android:hint="E-posta"
-        android:inputType="textEmailAddress"
-        android:paddingLeft="10dp"
-        android:textColor="@color/black"
-        android:textColorHint="@color/hintColor"
-        android:topLeftRadius="20dp" />
-    <Button
-        android:id="@+id/register"
-        android:layout_width="match_parent"
-        android:layout_height="45dp"
-        android:layout_marginLeft="25dp"
-        android:layout_marginTop="8dp"
-        android:layout_marginRight="25dp"
-        android:layout_marginBottom="8dp"
-        android:background="@drawable/rounded_button"
-        android:paddingLeft="10dp"
-        android:text="Üye Ol"
-        android:textColor="@color/white" />
-</LinearLayout>
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        tools:context=".LoginActivity">
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="175dp"
+            android:scaleX=".7"
+            android:scaleY=".7"
+            android:src="@drawable/logo" />
+    </LinearLayout>
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:gravity="center_horizontal"
+        android:layout_centerInParent="true"
+        android:orientation="vertical">
+
+        <EditText
+            android:id="@+id/username"
+            android:layout_width="match_parent"
+            android:layout_height="45dp"
+            android:layout_marginLeft="25dp"
+            android:layout_marginTop="15dp"
+            android:layout_marginRight="25dp"
+            android:layout_marginBottom="8dp"
+            android:background="@drawable/rounded_edittext"
+            android:lines="1"
+            android:ems="10"
+            android:hint="Kullanıcı Adı"
+            android:inputType="textPersonName"
+            android:paddingLeft="10dp"
+            android:textColor="@color/black"
+            android:textColorHint="@color/hintColor"
+            android:topLeftRadius="20dp" />
+        <EditText
+            android:id="@+id/password"
+            android:layout_width="match_parent"
+            android:layout_height="45dp"
+            android:layout_marginLeft="25dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginRight="25dp"
+            android:layout_marginBottom="8dp"
+            android:autofillHints=""
+            android:background="@drawable/rounded_edittext"
+            android:ems="10"
+            android:hint="Şifre"
+            android:inputType="textPassword"
+            android:paddingLeft="10dp"
+            android:lines="1"
+            android:textColor="@color/black"
+            android:textColorHint="@color/hintColor" />
+
+        <EditText
+            android:id="@+id/repassword"
+            android:layout_width="match_parent"
+            android:layout_height="45dp"
+            android:layout_marginLeft="25dp"
+            android:lines="1"
+            android:layout_marginTop="10dp"
+            android:layout_marginRight="25dp"
+            android:layout_marginBottom="8dp"
+            android:autofillHints=""
+            android:background="@drawable/rounded_edittext"
+            android:ems="10"
+            android:hint="Şifre (Tekrar)"
+            android:inputType="textPassword"
+            android:paddingLeft="10dp"
+            android:textColor="@color/black"
+            android:textColorHint="@color/hintColor" />
+
+        <EditText
+            android:id="@+id/email"
+            android:layout_width="match_parent"
+            android:layout_height="45dp"
+            android:layout_marginLeft="25dp"
+            android:layout_marginTop="8dp"
+            android:lines="1"
+            android:layout_marginRight="25dp"
+            android:layout_marginBottom="8dp"
+            android:autofillHints=""
+            android:background="@drawable/rounded_edittext"
+            android:ems="10"
+            android:hint="E-posta"
+            android:inputType="textEmailAddress"
+            android:paddingLeft="10dp"
+            android:textColor="@color/black"
+            android:textColorHint="@color/hintColor"
+            android:topLeftRadius="20dp" />
+        <Button
+            android:id="@+id/register"
+            android:layout_width="match_parent"
+            android:layout_height="45dp"
+            android:layout_marginLeft="25dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginRight="25dp"
+            android:layout_marginBottom="8dp"
+            android:background="@drawable/rounded_button"
+            android:paddingLeft="10dp"
+            android:text="Üye Ol"
+            android:textColor="@color/white" />
+    </LinearLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
         android:layout_alignParentBottom="true"
         android:gravity="center_horizontal"
+        android:background="@color/whiteback"
         android:orientation="vertical">
-        <View
-            android:layout_width="wrap_content"
-            android:layout_height="3dp"
-            android:background="@color/turuncu" />
+
         <LinearLayout
-            android:layout_width="227dp"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:gravity="center_horizontal"
-            android:layout_marginLeft="20dp"
             android:orientation="horizontal"
             android:visibility="visible">
 
-
             <TextView
                 android:id="@+id/kk"
-                android:layout_width="40dp"
+                android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
                 android:gravity="center"
-                android:text="Hesabın var mı?"
-                android:textColor="@color/black"
+                android:text="Hesabın var mı? "
+                android:textColor="@color/blackback"
                 android:textSize="18dp"
                 android:visibility="visible"
                 />
-
             <Button
                 android:id="@+id/login"
-                android:layout_width="wrap_content"
+                android:layout_width="83dp"
                 android:layout_height="match_parent"
                 android:layout_margin="0dp"
                 android:background="@null"

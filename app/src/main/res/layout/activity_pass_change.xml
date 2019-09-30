@@ -2,99 +2,99 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-android:layout_width="match_parent"
-android:layout_height="wrap_content"
-android:orientation="vertical">
-<LinearLayout
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/white"
     android:gravity="center_horizontal"
-    android:orientation="vertical"
-    tools:context=".LoginActivity">
-    <ImageView
-        android:layout_width="wrap_content"
-        android:layout_height="175dp"
-        android:scaleType="fitEnd"
-        android:scaleX=".7"
-        android:scaleY=".7"
-        android:src="@drawable/logo" />
-
-    <TextView
-        android:id="@+id/textView"
-        android:layout_width="wrap_content"
+android:orientation="vertical">
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Hesabını Kurtar"
-        android:textColor="@color/black"
-        android:layout_marginTop="60dp"
-        android:textSize="22dp"/>
-
-    <EditText
-        android:id="@+id/resetemail"
-        android:layout_width="match_parent"
-        android:layout_height="44dp"
-        android:layout_marginLeft="25dp"
-        android:layout_marginTop="15dp"
-        android:layout_marginRight="25dp"
-        android:layout_marginBottom="8dp"
-        android:lines="1"
-        android:autofillHints=""
-        android:background="@drawable/rounded_edittext"
-        android:ems="10"
-        android:hint="E-postanızı Giriniz"
-        android:inputType="textEmailAddress"
-        android:paddingLeft="10dp"
-        android:textColor="@color/black"
-        android:textColorHint="@color/hintColor"
-        android:topLeftRadius="20dp" />
-
-    <Button
-        android:id="@+id/yenisifre"
-        android:layout_width="match_parent"
-        android:layout_height="44dp"
-        android:layout_marginLeft="25dp"
-        android:layout_marginTop="8dp"
-        android:layout_marginRight="25dp"
-        android:layout_marginBottom="8dp"
-        android:background="@drawable/rounded_button"
-        android:paddingLeft="10dp"
-        android:text="Hesabımı Kurtar"
-        android:textColor="@color/white" />
-
-</LinearLayout>
+        android:orientation="vertical"
+        tools:context=".LoginActivity">
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="175dp"
+            android:layout_marginTop="20dp"
+            android:scaleX=".7"
+            android:scaleY=".7"
+            android:src="@drawable/logo" />
+    </LinearLayout>
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:gravity="center_horizontal"
+        android:layout_centerInParent="true"
+        android:orientation="vertical">
+        <TextView
+            android:id="@+id/textView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Hesabını Kurtar"
+            android:textColor="@color/black"
+            android:textSize="22dp"/>
+
+        <EditText
+            android:id="@+id/resetemail"
+            android:layout_width="match_parent"
+            android:layout_height="44dp"
+            android:layout_marginLeft="25dp"
+            android:layout_marginTop="15dp"
+            android:layout_marginRight="25dp"
+            android:layout_marginBottom="8dp"
+            android:lines="1"
+            android:autofillHints=""
+            android:background="@drawable/rounded_edittext"
+            android:ems="10"
+            android:hint="E-postanızı Giriniz"
+            android:inputType="textEmailAddress"
+            android:paddingLeft="10dp"
+            android:textColor="@color/black"
+            android:textColorHint="@color/hintColor"
+            android:topLeftRadius="20dp" />
+
+        <Button
+            android:id="@+id/yenisifre"
+            android:layout_width="match_parent"
+            android:layout_height="44dp"
+            android:layout_marginLeft="25dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginRight="25dp"
+            android:layout_marginBottom="8dp"
+            android:background="@drawable/rounded_button"
+            android:paddingLeft="10dp"
+            android:text="Hesabımı Kurtar"
+            android:textColor="@color/white" />
+
+    </LinearLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
         android:layout_alignParentBottom="true"
         android:gravity="center_horizontal"
+        android:background="@color/whiteback"
         android:orientation="vertical">
-        <View
-            android:layout_width="wrap_content"
-            android:layout_height="3dp"
-            android:background="@color/turuncu" />
         <LinearLayout
-            android:layout_width="227dp"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="20dp"
+            android:gravity="center_horizontal"
             android:orientation="horizontal"
             android:visibility="visible">
-
-
             <TextView
                 android:id="@+id/kk"
-                android:layout_width="40dp"
+                android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
                 android:gravity="center"
-                android:text="Hesabın var mı?"
-                android:textColor="@color/black"
+                android:text="Problem yoksa "
+                android:textColor="@color/blackback"
                 android:textSize="18dp"
-                android:visibility="visible"
-                />
-
+                android:visibility="visible" />
             <Button
                 android:id="@+id/loginback"
-                android:layout_width="wrap_content"
+                android:layout_width="83dp"
                 android:layout_height="match_parent"
                 android:layout_margin="0dp"
                 android:background="@null"
@@ -102,7 +102,7 @@ android:orientation="vertical">
                 android:text="Giriş Yap"
                 android:textColor="@color/black"
                 android:textSize="18dp" />
-
-        </LinearLayout></LinearLayout>
+        </LinearLayout>
+    </LinearLayout>
 </RelativeLayout>
 

@@ -1,12 +1,15 @@
 package com.sorum.sorum;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.v7.app.AppCompatActivity;
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -38,12 +41,22 @@ public class RegisterTwoActivity extends AppCompatActivity {
     private String dgtarih;
     private ArrayAdapter<String> dataAdapterForIller;
     private String secilenSinav = "Lütfen Sınav Seçiniz";
+    Context context = this;
+    SQliteHelper sqlitedb = new SQliteHelper(context);
+    private String dbusername;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register_two);
+        if (android.os.Build.VERSION.SDK_INT >= 21){
+            Window window = this.getWindow();
+            window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
+            window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+            window.setStatusBarColor(getApplication().getResources().getColor(R.color.white));
+        }
 
+        sqlitedb.onUpgrade(sqlitedb.getWritableDatabase(),1,2);
         DatabaseReference db = FirebaseDatabase.getInstance().getReference();
         auth = FirebaseAuth.getInstance();
 
@@ -95,6 +108,17 @@ public class RegisterTwoActivity extends AppCompatActivity {
             public void onNothingSelected(AdapterView<?> parent) {
             }
         });
+
+        ValueEventListener veriler = new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                dbusername =dataSnapshot.child(auth.getCurrentUser().getUid()).child("username").getValue().toString();
+            }
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) { }
+        };
+        db.child("users").addValueEventListener(veriler);
+
         ilerle.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -103,12 +127,48 @@ public class RegisterTwoActivity extends AppCompatActivity {
                     Toast.makeText(getApplicationContext(), "Lütfen kullanıcı adınızı giriniz", Toast.LENGTH_SHORT).show();
                     return;
                 }
+                sqlitedb.addUser(dbusername, kadi ,secilenSinav);
                 Map<String, Object> user = new HashMap<>();
                 user.put("name", kadi);
                 user.put("exam", secilenSinav);
+                db.child("exams").child(secilenSinav).addValueEventListener(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        for (DataSnapshot dk:dataSnapshot.getChildren()){
+                            String examName = dk.getKey();
+                            sqlitedb.addExam(examName);
+                            db.child("users").child(auth.getCurrentUser().getUid()).child("examlevel").child(secilenSinav).child(examName).setValue("Basit");
+                        }
+                    }
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) { }
+                });
                 user.put("dateofbirth", dgtarih);
+                db.child("questions").child(secilenSinav).addValueEventListener(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        for (DataSnapshot ds:dataSnapshot.getChildren()){
+                            String dersName=ds.getKey();
+                            sqlitedb.addLesson(dersName);
+
+                            db.child("questions").child(secilenSinav).child(dersName).addValueEventListener(new ValueEventListener() {
+                                @Override
+                                public void onDataChange(DataSnapshot dataSnapshot) {
+                                    for (DataSnapshot dm:dataSnapshot.getChildren()){
+                                        String konuName = dm.getKey();
+                                        db.child("users").child(auth.getCurrentUser().getUid()).child("questionlevel").child(secilenSinav).child(dersName).child(konuName).setValue("Basit");
+                                    }
+                                }
+                                @Override
+                                public void onCancelled(DatabaseError databaseError) { }
+                            });
+                        }
 
 
+                        db.child("questions").child(secilenSinav).removeEventListener(this);}
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) { }
+                });
 
                 db.child("users").child(auth.getCurrentUser().getUid()).updateChildren(user)
                         .addOnSuccessListener(new OnSuccessListener<Void>() {

@@ -7,15 +7,17 @@ import android.graphics.Color;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.design.widget.BottomNavigationView;
-import android.support.v4.app.Fragment;
-import android.support.v7.app.AlertDialog;
-import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
+import androidx.annotation.NonNull;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
+import androidx.fragment.app.Fragment;
+import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.app.AppCompatActivity;
+
 import android.view.Gravity;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.ArrayAdapter;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
@@ -40,17 +42,32 @@ public class MainActivity extends AppCompatActivity {
     private String exam ;
     private String name;
     private String username;
-    LinearLayout linearLayout;
+    Context context = this;
+    SQliteHelper sqlitedb = new SQliteHelper(context);
+    LinearLayout ustBar;
+    BottomNavigationView bottomnav;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        if (android.os.Build.VERSION.SDK_INT >= 21){
+            Window window = this.getWindow();
+            window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
+            window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+            window.setStatusBarColor(getApplication().getResources().getColor(R.color.white));
+            getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);
+        }
 
-        question_names = new ArrayAdapter<String>(MainActivity.this, R.layout.question_select);
+        sqlitedb.onUpgrade(sqlitedb.getWritableDatabase(),1,2);
+
+        question_names = sqlitedb.getLesson(MainActivity.this);
         DatabaseReference db = FirebaseDatabase.getInstance().getReference();
         DatabaseReference dbrun = FirebaseDatabase.getInstance().getReference("users");
         DatabaseReference dbRef = db.child("questions");
+        ustBar = (LinearLayout) findViewById(R.id.ustbar);
         FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
+
+
         if (currentUser == null) {
             Intent intent = new Intent(MainActivity.this, LoginActivity.class);
             MainActivity.this.finish();
@@ -58,19 +75,6 @@ public class MainActivity extends AppCompatActivity {
         }else{
             String uid = currentUser.getUid();
             mPostReference = db.child("users").child(uid).child("exam");
-            dbRef.child("AYT").addValueEventListener(new ValueEventListener() {
-                @Override
-                public void onDataChange(DataSnapshot dataSnapshot) {
-                    question_names.clear();
-                    for (DataSnapshot ds:dataSnapshot.getChildren()){
-                        String isim=ds.getKey();
-                        question_names.add(isim);
-                    }
-                    dbRef.removeEventListener(this);}
-                @Override
-                public void onCancelled(DatabaseError databaseError) { }
-            });
-
             ValueEventListener veriler = new ValueEventListener() {
                 @Override
                 public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -152,7 +156,7 @@ public class MainActivity extends AppCompatActivity {
             }
         }
 
-        BottomNavigationView bottomnav = findViewById(R.id.bottom_navigation);
+        bottomnav = (BottomNavigationView) findViewById(R.id.bottom_navigation);
         bottomnav.setOnNavigationItemSelectedListener(navListener);
 
         ImageButton Istatistik = (ImageButton)  this.findViewById(R.id.istatistik);
@@ -180,9 +184,9 @@ public class MainActivity extends AppCompatActivity {
                         underlying .add(question_names.getItem(i));
                     Fragment selectedFragment = null;
                     Bundle bundle = new Bundle();
-                    bundle.putString("name", name);
-                    bundle.putString("exam", exam);
-                    bundle.putString("username", username);
+                    bundle.putString("name", sqlitedb.getUser("name"));
+                    bundle.putString("exam", sqlitedb.getUser("exam"));
+                    bundle.putString("username", sqlitedb.getUser("username"));
                     bundle.putString("question_name", question_name);
                     bundle.putStringArrayList("question_names", underlying);
 
@@ -206,4 +210,13 @@ public class MainActivity extends AppCompatActivity {
                     return true;
                 }
             };
+    public void ustBarHide() {
+        if (ustBar.getVisibility() == View.VISIBLE) {
+            ustBar.setVisibility(View.GONE);
+            bottomnav.setVisibility(View.GONE);
+        }else if (ustBar.getVisibility() == View.GONE) {
+            ustBar.setVisibility(View.VISIBLE);
+            bottomnav.setVisibility(View.VISIBLE);
+        }
+    }
 }

@@ -1,45 +1,31 @@
 package com.sorum.sorum;
 
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.v7.app.AppCompatActivity;
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
-import com.google.android.gms.auth.api.signin.GoogleSignIn;
-import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
-import com.google.android.gms.auth.api.signin.GoogleSignInClient;
-import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
-import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
-import com.google.firebase.auth.AuthCredential;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.auth.GoogleAuthProvider;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
-import com.google.firebase.firestore.DocumentReference;
-import com.google.firebase.firestore.DocumentSnapshot;
-import com.google.firebase.firestore.EventListener;
-import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.FirebaseFirestoreException;
-
-import static android.support.constraint.Constraints.TAG;
 
 public class LoginActivity extends AppCompatActivity {
-
     private static final String TAG = "Sorum";
     private FirebaseAuth mAuth;
 
@@ -47,91 +33,97 @@ public class LoginActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
-        mAuth = FirebaseAuth.getInstance();
-        DatabaseReference rootRef = FirebaseDatabase.getInstance().getReference();
-        DatabaseReference animalsRef = rootRef.child("users");
-
-
-        if (mAuth.getCurrentUser() != null) {
-            startActivity(new Intent(LoginActivity.this, MainActivity.class));
+        if (android.os.Build.VERSION.SDK_INT >= 21){
+            Window window = this.getWindow();
+            window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
+            window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+            window.setStatusBarColor(getApplication().getResources().getColor(R.color.white));
         }
 
-        final EditText txtkadi = (EditText) this.findViewById(R.id.username);
-        final EditText txtpass = (EditText) this.findViewById(R.id.password);
-        Button login = (Button) this.findViewById(R.id.login);
-        Button register = (Button) this.findViewById(R.id.register);
-        Button sifredegis = (Button) this.findViewById(R.id.sifredegis);
+
+        mAuth = FirebaseAuth.getInstance();
+        DatabaseReference rootRef = FirebaseDatabase.getInstance().getReference();
+        DatabaseReference usersRef = rootRef.child("users");
+        if (mAuth.getCurrentUser() != null) {
+            startActivity(new Intent(LoginActivity.this, MainActivity.class));
+        }else{
+            final EditText txtUserName = (EditText) this.findViewById(R.id.username);
+            final EditText txtUserPass = (EditText) this.findViewById(R.id.password);
+            Button loginButton = (Button) this.findViewById(R.id.login);
+            Button registerButton = (Button) this.findViewById(R.id.register);
+            Button passChange = (Button) this.findViewById(R.id.sifredegis);
 
 
-        register.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                startActivity(new Intent(LoginActivity.this, RegisterActivity.class));
-            }
-        });
-        sifredegis.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                startActivity(new Intent(LoginActivity.this, PassChangeActivity.class));
-            }
-        });
-
-
-        login.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                String kadi = txtkadi.getText().toString();
-                String pass = txtpass.getText().toString();
-
-                if (TextUtils.isEmpty(kadi)) {
-                    Toast.makeText(getApplicationContext(), "Lütfen kullanıcı adınızı giriniz giriniz", Toast.LENGTH_SHORT).show();
-                    return;
+            registerButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    startActivity(new Intent(LoginActivity.this, RegisterActivity.class));
                 }
-                if (TextUtils.isEmpty(pass)) {
-                    Toast.makeText(getApplicationContext(), "Lütfen parolanızı giriniz", Toast.LENGTH_SHORT).show();
-                    return;
+            });
+            passChange.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    startActivity(new Intent(LoginActivity.this, PassChangeActivity.class));
                 }
+            });
 
-                ValueEventListener eventListener = new ValueEventListener() {
-                    @Override
-                    public void onDataChange(DataSnapshot dataSnapshot) {
-                        String search = kadi;
-                        Boolean found;
-                        for(DataSnapshot ds : dataSnapshot.getChildren()) {
-                            String movieName = ds.child("username").getValue(String.class);
-                            found = movieName.contains(search);
-                            if(found == true){
-                                Toast.makeText(LoginActivity.this, "Giris Yapılıyor", Toast.LENGTH_SHORT).show();
-                                String kadi = ds.child("email").getValue().toString();
-                                mAuth.signInWithEmailAndPassword(kadi, pass)
-                                        .addOnCompleteListener(LoginActivity.this, new OnCompleteListener<AuthResult>() {
-                                            @Override
-                                            public void onComplete(@NonNull Task<AuthResult> task) {
-                                                if (task.isSuccessful()) {
-                                                    FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
-                                                    Intent intent = new Intent(LoginActivity.this, MainActivity.class);
-                                                    intent.setFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
-                                                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                                                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                                                    LoginActivity.this.finish();
-                                                    startActivity(intent);
+            loginButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    String kadi = txtUserName.getText().toString();
+                    String pass = txtUserPass.getText().toString();
 
-                                                } else {
-                                                    Toast.makeText(getApplicationContext(), task.getException().getMessage(), Toast.LENGTH_SHORT).show();
-                                                }
-                                            }
-                                        });
-                            }else{
-                                Toast.makeText(LoginActivity.this, "Kullanıcı adınız yanlış", Toast.LENGTH_SHORT).show();
+                    if (TextUtils.isEmpty(kadi)) {
+                        Toast.makeText(getApplicationContext(), "Lütfen kullanıcı adınızı giriniz giriniz", Toast.LENGTH_SHORT).show();
+                        return;
+                    } else if (TextUtils.isEmpty(pass)) {
+                        Toast.makeText(getApplicationContext(), "Lütfen parolanızı giriniz", Toast.LENGTH_SHORT).show();
+                        return;
+                    }else{
+                        ValueEventListener eventListener = new ValueEventListener() {
+                            @Override
+                            public void onDataChange(DataSnapshot dataSnapshot) {
+                                String searchUserName = kadi;
+                                Boolean found = false;
+                                for(DataSnapshot ds : dataSnapshot.getChildren()) {
+                                    // Firebase users tablosunda kullanıcı adını arıyor
+                                    String userName = ds.child("username").getValue(String.class);
+                                    found = userName.equals(searchUserName);
+                                    if(found == true){
+                                        Toast.makeText(LoginActivity.this, "Giriş Yapılıyor", Toast.LENGTH_SHORT).show();
+                                        String kadi = ds.child("email").getValue().toString();
+                                        //Firebase Auth ile giriş yapılıyor
+                                        mAuth.signInWithEmailAndPassword(kadi, pass)
+                                                .addOnCompleteListener(LoginActivity.this, new OnCompleteListener<AuthResult>() {
+                                                    @Override
+                                                    public void onComplete(@NonNull Task<AuthResult> task) {
+                                                        if (task.isSuccessful()) {
+                                                            FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
+                                                            Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+                                                            intent.setFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
+                                                            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                                                            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                                                            LoginActivity.this.finish();
+                                                            startActivity(intent);
+
+                                                        } else {
+                                                            Toast.makeText(getApplicationContext(), task.getException().getMessage(), Toast.LENGTH_LONG).show();
+                                                        }
+                                                    }
+                                                });
+                                    }else{
+                                        Toast.makeText(LoginActivity.this, "Kullanıcı Adınız Yanlış", Toast.LENGTH_SHORT).show();
+                                    }
+                                }
                             }
-                        }
+                            @Override
+                            public void onCancelled(DatabaseError databaseError) {}
+                        };
+                        usersRef.addListenerForSingleValueEvent(eventListener);
                     }
-                    @Override
-                    public void onCancelled(DatabaseError databaseError) {}
-                };
-                animalsRef.addListenerForSingleValueEvent(eventListener);
-            }
-        });
+                }
+            });
+        }
     }
 }
 
