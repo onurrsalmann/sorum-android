@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/homeLinear"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical">
@@ -9,13 +10,29 @@
         android:id="@+id/tabs"
         android:layout_width="match_parent"
         android:layout_height="25dp"
+        android:gravity="top"
         app:tabIndicatorColor="@color/colorPrimary"
         app:tabIndicatorHeight="1dp"
         app:tabSelectedTextColor="@color/colorPrimary" />
 
     <androidx.viewpager.widget.ViewPager
         android:id="@+id/frameLayout"
+        android:layout_below="@id/tabs"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@color/white" />
-</LinearLayout>
+
+    <TextView
+        android:id="@+id/errorNet"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        android:gravity="center"
+        android:text="Lütfen internet bağlantınızı kontrol edin!"
+        android:textColor="@color/hintColor"
+        android:textSize="25sp"
+        android:textStyle="bold"
+        android:visibility="invisible" />
+</RelativeLayout>

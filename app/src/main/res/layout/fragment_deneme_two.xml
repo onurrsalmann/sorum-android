@@ -22,4 +22,17 @@
             android:layout_height="220dp"
             android:id="@+id/recyclerListTwo"
             android:layout_below="@id/deneme_two_baslik"/>
+    <TextView
+        android:id="@+id/errorNetExam"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        android:gravity="center"
+        android:text="Lütfen internet bağlantınızı kontrol edin!"
+        android:textColor="@color/hintColor"
+        android:textSize="25sp"
+        android:textStyle="bold"
+        android:visibility="invisible" />
 </RelativeLayout>

@@ -54,7 +54,6 @@ public class ExamRecyclerTwoViewAdapter extends RecyclerView.Adapter<ExamRecycle
                 intent.setFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                ((MainActivity)holder.context).finish();
                 (holder.context).startActivity(intent);
             }
         });

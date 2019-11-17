@@ -60,16 +60,16 @@ public class SQliteHelper extends SQLiteOpenHelper {
         db.insert(tableLessons,null,degerler);
         db.close();
     }
-    public ArrayAdapter<String> getLesson(Context Main){
+    public ArrayAdapter<String> getLesson(Context Main, int stylelayout){
         String query = "SELECT * FROM "+tableLessons;
         SQLiteDatabase db = this.getReadableDatabase();
-            Cursor cursor = db.rawQuery(query, null);
-            ArrayAdapter<String> question_names = null;
-            question_names = new ArrayAdapter<String>(Main, R.layout.question_select);
-            if(cursor.moveToFirst()){
-                do {
-                    question_names.add(cursor.getString(1));
-                }while (cursor.moveToNext());
+        Cursor cursor = db.rawQuery(query, null);
+        ArrayAdapter<String> question_names = null;
+        question_names = new ArrayAdapter<String>(Main, stylelayout);
+        if(cursor.moveToFirst()){
+            do {
+                question_names.add(cursor.getString(1));
+            }while (cursor.moveToNext());
         }
         return question_names;
     }
@@ -129,5 +129,29 @@ public class SQliteHelper extends SQLiteOpenHelper {
         }
         return examNames;
     }
+    public ArrayAdapter<String> istatisticGetExam(Context Main, int stylelayout){
+        String query = "SELECT * FROM "+tableExams;
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor cursor = db.rawQuery(query, null);
+        ArrayAdapter<String> question_names = null;
+        question_names = new ArrayAdapter<String>(Main, stylelayout);
+        if(cursor.moveToFirst()){
+            do {
+                question_names.add(cursor.getString(1));
+            }while (cursor.moveToNext());
+        }
+        return question_names;
+    }
+    public void resetTables(){
+        //Bunuda uygulamada kullanmıyoruz. Tüm verileri siler. Veritabını resetler.
+        SQLiteDatabase db = this.getWritableDatabase();
+        // Delete All Rows
+        db.delete(tableLessons, null, null);
+        db.delete(tableExams, null, null);
+        db.delete(tableUser, null, null);
+        db.close();
+    }
+
+
 
 }

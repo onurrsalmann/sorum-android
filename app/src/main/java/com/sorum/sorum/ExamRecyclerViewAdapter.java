@@ -51,10 +51,10 @@ public class ExamRecyclerViewAdapter extends RecyclerView.Adapter<ExamRecyclerVi
 
                 FragmentManager fragmentManager = ((MainActivity)holder.activity).getSupportFragmentManager();
                 FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-                fragmentManager.popBackStack();
                 DenemeTwoFragment denemeTwoFragment = new DenemeTwoFragment() ;
                 denemeTwoFragment.setArguments(bundle);
-                fragmentTransaction.add(R.id.fragment_container, denemeTwoFragment);
+                fragmentTransaction.replace(R.id.fragment_container, denemeTwoFragment);
+                fragmentTransaction.addToBackStack(denemeTwoFragment.getClass().getName());
                 fragmentTransaction.commit();
             }
         });

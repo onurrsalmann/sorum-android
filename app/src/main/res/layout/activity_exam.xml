@@ -1,0 +1,208 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white"
+    tools:context=".ExamActivity">
+    <LinearLayout
+        android:id="@+id/activityExam"
+        android:background="@color/white"
+        android:layout_width="match_parent"
+        android:orientation="vertical"
+        android:layout_height="wrap_content">
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="42dp"
+            android:orientation="horizontal">
+            <ImageView
+                android:id="@+id/logo"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_alignParentLeft="true"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
+                android:layout_marginTop="3dp"
+                android:layout_toLeftOf="@+id/examLastExit"
+                android:scaleType="fitStart"
+                android:src="@drawable/logo" />
+
+            <Button
+                android:id="@+id/examLastExit"
+                android:layout_centerInParent="true"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:background="@drawable/examexitbutton"
+                android:layout_marginBottom="3dp"
+                android:layout_marginTop="3dp"
+                android:text="AYRIL"
+                android:textSize="20sp"
+                android:textStyle="bold"
+                android:textColor="@color/turuncu"
+                />
+            <TextView
+                android:id="@+id/examLastTime"
+                android:layout_toRightOf="@+id/examLastExit"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_centerHorizontal="true"
+                android:layout_alignParentRight="true"
+                android:textSize="30dp"
+                android:textStyle="bold"
+                android:textColor="@color/black"
+                android:gravity="center"
+                android:text="00:00"/>
+        </RelativeLayout>
+        <View
+            android:layout_width="wrap_content"
+            android:layout_height="1.5dp"
+            android:background="@color/turuncu" />
+    </LinearLayout>
+
+    <RelativeLayout
+        android:id="@+id/examRelative"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/activityExam">
+        <TextView
+            android:id="@+id/examDesp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="10dp"
+            android:layout_marginTop="10dp"
+            android:gravity="left"
+            android:layout_above="@+id/examSoru"
+            android:layout_below="@+id/examRelative"
+            android:layout_marginBottom="10dp"
+            android:layout_marginLeft="10dp"
+            android:textColor="@color/black"
+            android:textSize="16dp"
+            android:text="ır. Lorm Ipsum, Çiçero tarafından M.Ö. 45 tarihinde kaleme alınan de Finibus Bonorum et Malorum (İyi ve Kötünün Uç Sınırları) eserinin 1.10.32 ve 1.10.33 sayılı bölümlerinden gelmektedir. Bu kitap, ahlak kuramı üzerine bir tezdir ve Rönesans döneminde çok popüler olmuştur. Lorem Ipsum pasajının ilk satırı olan Lorem ipsum dolor sit amet 1.10.32 sayılı bölümdeki bir satırdan gelmektedir."
+            tools:ignore="NotSibling" />
+        <TextView
+            android:id="@+id/examSoru"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="10dp"
+            android:layout_marginTop="10dp"
+            android:gravity="left"
+            android:layout_above="@+id/optionBlock"
+            android:layout_marginBottom="10dp"
+            android:layout_marginLeft="10dp"
+            android:textColor="@color/black"
+            android:textSize="17dp"
+            android:textStyle="bold"
+            android:text="Soru yükleniyor... Lütfen bekleyiniz..." />
+
+        <RadioGroup
+            android:id="@+id/optionBlock"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_above="@+id/examQuestPass"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:layout_marginBottom="10dp"
+            android:background="@drawable/examexitbutton">
+            <RadioButton
+                android:id="@+id/examOptionA"
+                android:layout_marginTop="5dp"
+                android:layout_marginBottom="5dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:buttonTint="@color/turuncu"
+                android:text="A şıkkı" />
+            <View
+                android:layout_width="wrap_content"
+                android:layout_marginRight="10dp"
+                android:layout_marginLeft="10dp"
+                android:layout_height="1.5dp"
+                android:background="@color/turuncu" />
+            <RadioButton
+                android:id="@+id/examOptionB"
+                android:layout_marginTop="5dp"
+                android:layout_marginBottom="5dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:buttonTint="@color/turuncu"
+                android:layout_below="@+id/optionA"
+                android:text="B şıkkı" />
+            <View
+                android:layout_width="wrap_content"
+                android:layout_marginRight="10dp"
+                android:layout_marginLeft="10dp"
+                android:layout_height="1.5dp"
+                android:background="@color/turuncu" />
+            <RadioButton
+                android:id="@+id/examOptionC"
+                android:layout_marginTop="5dp"
+                android:layout_marginBottom="5dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:buttonTint="@color/turuncu"
+                android:layout_below="@+id/optionB"
+                android:text="C şıkkı" />
+            <View
+                android:layout_width="wrap_content"
+                android:layout_marginRight="10dp"
+                android:layout_marginLeft="10dp"
+                android:layout_height="1.5dp"
+                android:background="@color/turuncu" />
+            <RadioButton
+                android:id="@+id/examOptionD"
+                android:layout_marginTop="5dp"
+                android:layout_marginBottom="5dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:buttonTint="@color/turuncu"
+                android:layout_below="@+id/optionC"
+                android:text="D şıkkı" />
+            <View
+                android:layout_width="wrap_content"
+                android:layout_below="@+id/examAquest"
+                android:layout_marginRight="10dp"
+                android:layout_marginLeft="10dp"
+                android:layout_height="1.5dp"
+                android:background="@color/turuncu" />
+            <RadioButton
+                android:id="@+id/examOptionE"
+                android:layout_marginTop="5dp"
+                android:layout_marginBottom="5dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:buttonTint="@color/turuncu"
+                android:layout_below="@+id/optionD"
+                android:text="E şıkkı" />
+        </RadioGroup>
+        <Button
+            android:id="@+id/examQuestPass"
+            android:layout_width="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentLeft="true"
+            android:layout_marginLeft="10dp"
+            android:layout_marginBottom="10dp"
+            android:background="@drawable/examexitbutton"
+            android:text="Geç"
+            android:textSize="20sp"
+            android:textColor="@color/turuncu"
+            android:textStyle="bold"
+            android:layout_height="35dp"/>
+        <Button
+            android:id="@+id/examQuestNext"
+            android:text="Devam Et"
+            android:background="@drawable/examexitbutton"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentBottom="true"
+            android:layout_marginRight="10dp"
+            android:layout_marginBottom="10dp"
+            android:layout_width="wrap_content"
+            android:paddingRight="20dp"
+            android:paddingLeft="20dp"
+            android:textStyle="bold"
+            android:textColor="@color/turuncu"
+            android:textSize="20sp"
+            android:layout_height="35dp"/>
+    </RelativeLayout>
+
+</RelativeLayout>

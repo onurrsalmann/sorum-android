@@ -14,14 +14,13 @@
         android:layout_height="wrap_content">
         <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="42dp"
             android:orientation="horizontal">
             <ImageView
-                android:layout_width="160dp"
-                android:layout_height="50dp"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
                 android:layout_alignParentLeft="true"
                 android:paddingLeft="10dp"
-                android:paddingTop="5dp"
                 android:scaleType="fitStart"
                 android:src="@drawable/logo" />
 
@@ -29,7 +28,7 @@
                 android:id="@+id/istatistik"
                 android:layout_alignParentRight="true"
                 android:layout_width="wrap_content"
-                android:layout_height="50dp"
+                android:layout_height="match_parent"
                 android:layout_marginRight="15dp"
                 android:background="@color/white"
                 android:layout_marginTop="1dp"
@@ -37,7 +36,7 @@
         </RelativeLayout>
         <View
             android:layout_width="wrap_content"
-            android:layout_height="2dp"
+            android:layout_height="1.5dp"
             android:background="@color/turuncu" />
     </LinearLayout>
     <LinearLayout
@@ -45,16 +44,17 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/tab_linear"
-        android:layout_marginTop="5dp"
         android:orientation="vertical">
-        <TextView
+        <TextView xmlns:android="http://schemas.android.com/apk/res/android"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="24dp"
+            android:background="@color/turuncu"
+            android:gravity="center"
             android:text="Profil Ayarları"
-            android:textSize="17dp"
-            android:layout_marginStart="5dp"
-            android:textColor="@color/turuncu"
-            android:layout_below="@id/tab_linear"/>
+            android:textAlignment="center"
+            android:textColor="@color/white"
+            android:textFontWeight="900"
+            android:textSize="14sp" />
 
         <TextView
             android:layout_width="match_parent"
@@ -101,14 +101,17 @@
         android:layout_marginTop="15dp"
         android:layout_below="@id/ayarlar_profilkismi"
         android:orientation="vertical">
-        <TextView
+        <TextView xmlns:android="http://schemas.android.com/apk/res/android"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="24dp"
+            android:background="@color/turuncu"
+            android:gravity="center"
             android:text="Sınav Ayarları"
-            android:textSize="17dp"
-            android:layout_marginStart="5dp"
-            android:textColor="@color/turuncu"
-            android:layout_below="@id/tab_linear"/>
+            android:textAlignment="center"
+            android:textColor="@color/white"
+            android:layout_below="@id/tab_linear"
+            android:textFontWeight="900"
+            android:textSize="14sp" />
         <Spinner
             android:id="@+id/hazirlann"
             android:layout_width="match_parent"
@@ -116,7 +119,6 @@
             android:layout_margin="10dp"
             android:autofillHints=""
             android:ems="10"
-            android:background="@drawable/rounded_edittext"
             android:textColor="@color/black" />
 
     </LinearLayout>
@@ -127,13 +129,17 @@
         android:layout_below="@+id/ayarlar_sinavkismi"
         android:layout_marginTop="15dp"
         android:orientation="vertical">
-        <TextView
+        <TextView xmlns:android="http://schemas.android.com/apk/res/android"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="24dp"
+            android:background="@color/turuncu"
+            android:gravity="center"
             android:text="Hesap Ayarları"
-            android:layout_marginStart="5dp"
-            android:textSize="17dp"
-            android:textColor="@color/turuncu"/>
+            android:textAlignment="center"
+            android:textColor="@color/white"
+            android:layout_below="@id/tab_linear"
+            android:textFontWeight="900"
+            android:textSize="14sp" />
         <Button
             android:id="@+id/istatistiksifirla"
             android:layout_width="match_parent"

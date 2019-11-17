@@ -1,5 +1,6 @@
 package com.sorum.sorum;
 
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -122,8 +123,13 @@ public class RegisterTwoActivity extends AppCompatActivity {
         ilerle.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                ProgressDialog progressDialog = ProgressDialog.show(context, "",
+                        "Giriş Yapılıyor. Lütfen bekleyin...", true);
+                progressDialog.show();
+
                 String kadi = ad.getText().toString();
                 if (TextUtils.isEmpty(kadi)) {
+                    progressDialog.dismiss();
                     Toast.makeText(getApplicationContext(), "Lütfen kullanıcı adınızı giriniz", Toast.LENGTH_SHORT).show();
                     return;
                 }

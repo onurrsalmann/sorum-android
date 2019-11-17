@@ -1,5 +1,6 @@
 package com.sorum.sorum;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import androidx.annotation.NonNull;
@@ -31,6 +32,8 @@ public class ProfilFragment extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_profil, container, false);
+        SQliteHelper sqlitedb = new SQliteHelper(getActivity());
+
 
         logout = v.findViewById(R.id.logout);
         ayarlar = v.findViewById(R.id.settings);
@@ -44,11 +47,13 @@ public class ProfilFragment extends Fragment {
         tvname.setText(name);
         tvusername.setText(username);
         tvexam.setText(exam);
+        sqlitedb.onUpgrade(sqlitedb.getWritableDatabase(),1,2);
 
         logout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v){
                 FirebaseAuth.getInstance().signOut();
+                sqlitedb.resetTables();
                 Intent intent = new Intent(getActivity(), LoginActivity.class);
                 intent.setFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);

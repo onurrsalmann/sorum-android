@@ -43,13 +43,6 @@ public class RegisterActivity extends AppCompatActivity {
         auth=FirebaseAuth.getInstance();
         mDatabase = FirebaseDatabase.getInstance().getReference();
 
-/*
-        Map<String, Object> useri = new HashMap<>();
-        useri.put("soru1","soruumm");
-        useri.put("cevap1", "cevabımm");
-
-        mDatabase.child("exams").child("TYT").child("Matematik Soruları").child("Deneme1").setValue(useri);*/
-
         Button login = (Button) this.findViewById(R.id.login);
         final EditText txtkadi = (EditText) this.findViewById(R.id.username);
         final EditText txtpass = (EditText) this.findViewById(R.id.password);

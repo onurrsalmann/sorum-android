@@ -8,6 +8,7 @@
     tools:context=".MainActivity">
     <LinearLayout
         android:background="@color/white"
+        android:id="@+id/activityDeneme"
         android:layout_width="match_parent"
         android:orientation="vertical"
         android:layout_height="wrap_content">
@@ -24,20 +25,102 @@
                 android:scaleType="fitStart"
                 android:src="@drawable/logo" />
 
-            <ImageButton
-                android:id="@+id/istatistik"
+            <Button
+                android:id="@+id/examExit"
                 android:layout_alignParentRight="true"
-                android:layout_width="wrap_content"
-                android:layout_height="50dp"
-                android:layout_marginRight="15dp"
-                android:background="@color/white"
-                android:layout_marginTop="1dp"
-                app:srcCompat="@drawable/analiz" />
+                android:layout_centerVertical="true"
+                android:layout_width="100dp"
+                android:layout_height="35dp"
+                android:text="AYRIL"
+                android:textStyle="bold"
+                android:textColor="@color/turuncu"
+                android:layout_marginTop="5dp"
+                android:textSize="22sp"
+                android:background="@drawable/examexitbutton"
+                android:layout_marginRight="10dp" />
         </RelativeLayout>
-        <View
-            android:layout_width="wrap_content"
-            android:layout_height="2dp"
-            android:background="@color/turuncu" />
     </LinearLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/activityDeneme"
+        android:orientation="vertical">
+        <TextView
+            android:id="@+id/examName"
+            android:gravity="center"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="30dp"
+            android:textSize="26sp"
+            android:textColor="@color/black"
+            android:layout_weight="1"
+            android:textStyle="bold|italic"
+            android:text="Denemenin İsmi" />
+
+        <TextView
+            android:id="@+id/examLevel"
+            android:gravity="center"
+            android:layout_marginTop="10dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/examName"
+            android:textSize="18sp"
+            android:textColor="@color/black"
+            android:layout_weight="1"
+            android:textStyle="bold"
+            android:text="Basit"  />
+
+        <TextView
+            android:id="@+id/examAllTime"
+            android:gravity="center"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="15dp"
+            android:layout_below="@+id/examLevel"
+            android:textSize="23sp"
+            android:textColor="@color/turuncu"
+            android:textStyle="bold"
+            android:layout_weight="1"
+            android:text="Toplam Süreniz"  />
+
+        <TextView
+            android:id="@+id/examTime"
+            android:layout_marginTop="5dp"
+            android:gravity="center"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/examAllTime"
+            android:textSize="24sp"
+            android:textColor="@color/black"
+            android:textStyle="bold"
+            android:layout_weight="1"
+            android:text="45:00" />
+
+        <Button
+            android:id="@+id/examStartButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/examTime"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="40dp"
+            android:background="@drawable/examstartbutton"
+            android:text="BAŞLA&#10;(10)"
+            android:textSize="40dp"
+            android:textColor="@color/white" />
+        <TextView
+            android:id="@+id/examPub"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:layout_below="@+id/examStartButton"
+            android:gravity="center"
+            android:text="Bu deneme ..... yayıncılığa aittir."
+            android:layout_alignParentBottom="true"
+            android:padding="0dp"
+            android:textColor="@color/black"
+            android:textSize="14sp"
+            android:textStyle="bold" />
+    </RelativeLayout>
 
 </RelativeLayout>

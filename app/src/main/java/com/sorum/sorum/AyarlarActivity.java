@@ -1,5 +1,6 @@
 package com.sorum.sorum;
 
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import androidx.annotation.NonNull;
@@ -49,6 +50,7 @@ public class AyarlarActivity extends AppCompatActivity {
     private FirebaseAuth auth;
     private String namename;
     private Boolean sasa = true;
+    private String userExam = "";
     FirebaseAuth firebaseAuth;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -76,14 +78,9 @@ public class AyarlarActivity extends AppCompatActivity {
         userdelete = (Button) findViewById(R.id.userdelete);
         name = (EditText) findViewById(R.id.namechange);
         username = (EditText) findViewById(R.id.usernamechange);
+        Context aa = this;
         ImageButton Istatistik = (ImageButton)  this.findViewById(R.id.istatistik);
         final FirebaseUser user  = firebaseAuth.getCurrentUser();
-
-
-        dataaAdapterForIller = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, sinav);
-        dataaAdapterForIller.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        hazirlann.setAdapter(dataaAdapterForIller);
-
 
         userdelete.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -93,7 +90,6 @@ public class AyarlarActivity extends AppCompatActivity {
                     AlertDialog.Builder uyari = new AlertDialog.Builder(AyarlarActivity.this);
                     uyari.setTitle("Emin misin?");
                     uyari.setMessage("Bu işlem hesabınızı ve tüm bilgilerinizi silecektir. Geri dönüşü olamaz. Emin misiniz ?");
-                    Log.d("TAG", "BURDA123");
                     uyari.setPositiveButton("Sil", new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
@@ -144,8 +140,25 @@ public class AyarlarActivity extends AppCompatActivity {
                     namename = dbusername;
                     name.setText(dbname);
                     username.setText(dbusername);
-                    sinav.add(dbexam);
                     secilenSinav = dbexam;
+                    sinav.add(dbexam);
+                    db.child("exams").addValueEventListener(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(DataSnapshot dataSnapshot) {
+                            for (DataSnapshot ds:dataSnapshot.getChildren()){
+                                if(!dbexam.equals(ds.getKey())){
+                                    sinav.add(ds.getKey());
+                                }
+                            }
+                            dataaAdapterForIller = new ArrayAdapter<String>(aa, android.R.layout.simple_spinner_item, sinav);
+                            dataaAdapterForIller.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                            hazirlann.setAdapter(dataaAdapterForIller);
+                        }
+                        @Override
+                        public void onCancelled(DatabaseError databaseError) {
+                        }
+                    });
+
                     db.removeEventListener(this);
                 }
 
@@ -154,18 +167,6 @@ public class AyarlarActivity extends AppCompatActivity {
                 }
             });
         }
-
-        db.child("exams").addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                for (DataSnapshot ds:dataSnapshot.getChildren()){
-                    sinav.add(ds.getKey());
-                }
-            }
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-            }
-        });
 
         hazirlann.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override

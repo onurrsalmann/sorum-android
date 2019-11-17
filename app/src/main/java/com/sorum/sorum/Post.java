@@ -1,6 +1,8 @@
 package com.sorum.sorum;
 
-public class Post {
+import java.io.Serializable;
+
+public class Post implements Serializable {
     private String soruId;
     private String soru;
     private String cevapA;
@@ -9,8 +11,9 @@ public class Post {
     private String cevapD;
     private String cevapE;
     private String dogruCevap;
+    private String desp;
 
-    public Post(String soruId, String soru, String cevapA, String cevapB, String cevapC, String cevapD, String cevapE, String dogruCevap) {
+    public Post(String soruId,String desp, String soru, String cevapA, String cevapB, String cevapC, String cevapD, String cevapE, String dogruCevap) {
         this.soruId = soruId;
         this.soru = soru;
         this.cevapA = cevapA;
@@ -19,6 +22,7 @@ public class Post {
         this.cevapD = cevapD;
         this.cevapE = cevapE;
         this.dogruCevap = dogruCevap;
+        this.desp = desp;
     }
 
     public String getSoruId() {
@@ -35,6 +39,14 @@ public class Post {
 
     public void setSoru(String soru) {
         this.soru = soru;
+    }
+
+    public String getDesp() {
+        return desp;
+    }
+
+    public void setDesp(String desp) {
+        this.desp = desp;
     }
 
     public String getCevapA() {
