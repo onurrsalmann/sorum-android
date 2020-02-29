@@ -1,7 +1,6 @@
 # Sorum Android App
 
-This app is a question solution app to get experience.
-
+This application is a question solution application developed to gain experience.
 
 ## License
 [MIT](https://choosealicense.com/licenses/mit/)
