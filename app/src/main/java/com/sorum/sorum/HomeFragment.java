@@ -9,6 +9,9 @@ import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import com.google.android.material.tabs.TabLayout;
+import com.google.firebase.auth.FirebaseAuth;
+
+import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
 import androidx.viewpager.widget.ViewPager;
 import android.util.Log;
@@ -46,6 +49,7 @@ public class HomeFragment extends Fragment {
         username = bundle.getString("username");
         question_name = bundle.getString("question_name");
         question_names = bundle.getStringArrayList("question_names");
+
         if(isNetworkAvailable()){
             if(exam.isEmpty()){
                 Intent ntent =new Intent(getContext(), RegisterTwoActivity.class);///İntent ouşturup 2. activity'e gideceğini belirledik.

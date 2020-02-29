@@ -3,36 +3,31 @@ package com.sorum.sorum;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Color;
-import android.os.Build;
 import android.os.Bundle;
 import androidx.annotation.NonNull;
-import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.util.Log;
-import android.view.Gravity;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.util.Objects;
+
 public class LoginActivity extends AppCompatActivity {
-    private static final String TAG = "Sorum";
     private FirebaseAuth mAuth;
     Context context = this;
     SQliteHelper sqlitedb = new SQliteHelper(context);
@@ -55,43 +50,32 @@ public class LoginActivity extends AppCompatActivity {
         if (mAuth.getCurrentUser() != null) {
             startActivity(new Intent(LoginActivity.this, MainActivity.class));
         }else{
-            final EditText txtUserName = (EditText) this.findViewById(R.id.username);
-            final EditText txtUserPass = (EditText) this.findViewById(R.id.password);
-            Button loginButton = (Button) this.findViewById(R.id.login);
-            Button registerButton = (Button) this.findViewById(R.id.register);
-            Button passChange = (Button) this.findViewById(R.id.sifredegis);
+            final EditText txtUserName = this.findViewById(R.id.username);
+            final EditText txtUserPass = this.findViewById(R.id.password);
+            Button loginButton = this.findViewById(R.id.login);
+            Button registerButton = this.findViewById(R.id.register);
+            Button passChange = this.findViewById(R.id.sifredegis);
 
 
-            registerButton.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    startActivity(new Intent(LoginActivity.this, RegisterActivity.class));
-                }
-            });
-            passChange.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    startActivity(new Intent(LoginActivity.this, PassChangeActivity.class));
-                }
-            });
+            registerButton.setOnClickListener(v -> startActivity(new Intent(LoginActivity.this, RegisterActivity.class)));
+            passChange.setOnClickListener(v -> startActivity(new Intent(LoginActivity.this, PassChangeActivity.class)));
 
             loginButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    //ProgressDialog
-                    ProgressDialog progressDialog = ProgressDialog.show(context, "",
-                            "Giriş Yapılıyor. Lütfen bekleyin...", true);
-
                     String kadi = txtUserName.getText().toString();
                     String pass = txtUserPass.getText().toString();
 
                     if (TextUtils.isEmpty(kadi)) {
+                        Log.d("salman","burda");
                         Toast.makeText(getApplicationContext(), "Lütfen kullanıcı adınızı giriniz giriniz", Toast.LENGTH_SHORT).show();
                         return;
                     } else if (TextUtils.isEmpty(pass)) {
                         Toast.makeText(getApplicationContext(), "Lütfen parolanızı giriniz", Toast.LENGTH_SHORT).show();
                         return;
                     }else{
+                        ProgressDialog progressDialog = ProgressDialog.show(context, "",
+                                "Giriş Yapılıyor. Lütfen bekleyin...", true);
                         ValueEventListener eventListener = new ValueEventListener() {
                             @Override
                             public void onDataChange(DataSnapshot dataSnapshot) {
@@ -118,7 +102,7 @@ public class LoginActivity extends AppCompatActivity {
                                                 }
                                             }
                                             @Override
-                                            public void onCancelled(DatabaseError databaseError) { }
+                                            public void onCancelled(DatabaseError databaseError) { progressDialog.dismiss(); }
                                         });
                                         rootRef.child("questions").child(secilensinav).addValueEventListener(new ValueEventListener() {
                                             @Override
@@ -129,16 +113,15 @@ public class LoginActivity extends AppCompatActivity {
                                                 }
                                                 rootRef.child("questions").child(secilensinav).removeEventListener(this);}
                                             @Override
-                                            public void onCancelled(DatabaseError databaseError) { }
+                                            public void onCancelled(DatabaseError databaseError) { progressDialog.dismiss(); }
                                         });
                                         //Firebase Auth ile giriş yapılıyor
-                                        mAuth.signInWithEmailAndPassword(kadi, pass)
+                                        Task<AuthResult> authResultTask = mAuth.signInWithEmailAndPassword(kadi, pass)
                                                 .addOnCompleteListener(LoginActivity.this, new OnCompleteListener<AuthResult>() {
                                                     @Override
                                                     public void onComplete(@NonNull Task<AuthResult> task) {
                                                         if (task.isSuccessful()) {
-                                                            sqlitedb.addUser(userName, name ,secilensinav);
-                                                            FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
+                                                            sqlitedb.addUser(name, userName, secilensinav);
                                                             Intent intent = new Intent(LoginActivity.this, MainActivity.class);
                                                             intent.setFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
                                                             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
@@ -150,7 +133,7 @@ public class LoginActivity extends AppCompatActivity {
                                                             //alertShow.dismiss();
                                                             progressDialog.dismiss();
                                                             String uyarimesaj;
-                                                            switch (task.getException().getMessage()){
+                                                            switch (Objects.requireNonNull(task.getException()).getMessage()) {
                                                                 case "The password is invalid or the user does not have a password.":
                                                                     uyarimesaj = "Şifreniz veya kullanıcı adınız hatalı. Lütfen tekrar deneyin";
                                                                     break;
@@ -166,12 +149,13 @@ public class LoginActivity extends AppCompatActivity {
                                                     }
                                                 });
                                     }else{
+                                        progressDialog.dismiss();
                                         Toast.makeText(LoginActivity.this, "Kullanıcı adınız yanlış", Toast.LENGTH_SHORT).show();
                                     }
                                 }
                             }
                             @Override
-                            public void onCancelled(DatabaseError databaseError) {}
+                            public void onCancelled(@NonNull DatabaseError databaseError) {}
                         };
                         usersRef.addListenerForSingleValueEvent(eventListener);
                     }

@@ -45,13 +45,14 @@ public class PassChangeActivity extends AppCompatActivity {
         yenisifre.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                yenisifre.setClickable(false);
                 EditText email = (EditText) findViewById(R.id.resetemail);
 
                 String mail = email.getText().toString().trim();
 
                 if (TextUtils.isEmpty(mail)) {
                     Toast.makeText(getApplication(), "Lütfen email adresinizi giriniz", Toast.LENGTH_SHORT).show();
+                    yenisifre.setClickable(true);
                     return;
                 }
 
@@ -65,6 +66,7 @@ public class PassChangeActivity extends AppCompatActivity {
                                     Toast.makeText(PassChangeActivity.this, "Yeni parola için gerekli bağlantı adresinize gönderildi!", Toast.LENGTH_SHORT).show();
                                 } else {
                                     Toast.makeText(PassChangeActivity.this, "Geçersiz bir mail!", Toast.LENGTH_SHORT).show();
+                                    yenisifre.setClickable(true);
                                 }
 
 

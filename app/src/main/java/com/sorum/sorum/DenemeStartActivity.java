@@ -90,6 +90,8 @@ public class DenemeStartActivity extends AppCompatActivity {
                             ));
                         }
                     }
+                    bundle.putString("examPub", dataSnapshot.child(String.valueOf(random)).child("pub").getValue().toString());
+                    bundle.putString("examId", dataSnapshot.child(String.valueOf(random)).getKey());
                     bundle.putSerializable("examQuest",examQuest);
                     bundle.putInt("examTime",((examDk+examSn)*1000)+1000);
 

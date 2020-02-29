@@ -9,6 +9,8 @@ import androidx.fragment.app.Fragment;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
+
+import android.util.Log;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
@@ -63,6 +65,7 @@ public class MainActivity extends AppCompatActivity {
             for (int i = 0; i < question_names.getCount(); i++)
                 underlying .add(question_names.getItem(i));
 
+            Log.d("Salman", sqlitedb.getUser("name"));
             Bundle bundle = new Bundle();
             bundle.putString("name", sqlitedb.getUser("name"));
             bundle.putString("exam", sqlitedb.getUser("exam"));

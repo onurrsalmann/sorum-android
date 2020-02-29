@@ -7,17 +7,15 @@ import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.CountDownTimer;
-import android.os.Handler;
 import android.util.Log;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Button;
+import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
 
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
 
 public class ExamActivity extends AppCompatActivity {
     CountDownTimer countDownTimer;
@@ -33,15 +31,22 @@ public class ExamActivity extends AppCompatActivity {
     Button examQuestNext;
     Button examQuestPass;
     ArrayList<Post> examQuest;
+    TextView lastTimeLbl;
+    String examId;
+    String examPub;
+    int lastTime;
+    int examTime;
     RadioGroup optionBlock;
     ArrayList<Integer> examPass = new ArrayList<>();
+    private ArrayList<ExamAnswer> falseAnswerList  = new ArrayList<>();
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_exam);
         optionBlock = findViewById(R.id.optionBlock);
-        TextView lastTimeLbl = findViewById(R.id.examLastTime);
+        lastTimeLbl = findViewById(R.id.examLastTime);
         examSoru = findViewById(R.id.examSoru);
         examDesp = findViewById(R.id.examDesp);
         examOptionA = findViewById(R.id.examOptionA);
@@ -54,7 +59,10 @@ public class ExamActivity extends AppCompatActivity {
         Button examExitBtn = findViewById(R.id.examLastExit);
         Bundle bundleObject = getIntent().getBundleExtra("bundle");
         examQuest = (ArrayList<Post>) bundleObject.getSerializable("examQuest");
-        Integer examTime = bundleObject.getInt("examTime");
+        examTime = bundleObject.getInt("examTime");
+        examId = bundleObject.getString("examId");
+        examPub = bundleObject.getString("examPub");
+
 
         ArrayList<String> examStringList = new ArrayList<>();
         int i=0;
@@ -86,26 +94,29 @@ public class ExamActivity extends AppCompatActivity {
             @SuppressLint("SetTextI18n")
             @Override
             public void onTick(long millisUntilFinished) {
-                int saniye = (int)millisUntilFinished/1000;
-                String lastTimeDk = "00";
-                String lastTimeSn;
-                if(saniye >= 60){
-                    int dakika = saniye/60;
-                    saniye = saniye-(dakika*60);
-                    if(dakika<10){ lastTimeDk = "0"+dakika; }else{ lastTimeDk = String.valueOf(dakika); }
-                    if(saniye<10){ lastTimeSn = "0"+saniye; }else{ lastTimeSn = String.valueOf(saniye); }
-                }else{
-                    if(saniye<10){ lastTimeSn = "0"+saniye; }else{ lastTimeSn = String.valueOf(saniye); }
-                }
-                lastTimeLbl.setText(lastTimeDk+":"+lastTimeSn);
+                lastTime = (int)millisUntilFinished;
+                lastTimeLbl.setText(timeTranslate((int)millisUntilFinished));
             }
             @Override
             public void onFinish() {
-
+                examFinish();
             }
         }.start();
     }
-
+    private String timeTranslate(int time){
+        int saniye = time/1000;
+        String lastTimeDk = "00";
+        String lastTimeSn;
+        if(saniye >= 60){
+            int dakika = saniye/60;
+            saniye = saniye-(dakika*60);
+            if(dakika<10){ lastTimeDk = "0"+dakika; }else{ lastTimeDk = String.valueOf(dakika); }
+            if(saniye<10){ lastTimeSn = "0"+saniye; }else{ lastTimeSn = String.valueOf(saniye); }
+        }else{
+            if(saniye<10){ lastTimeSn = "0"+saniye; }else{ lastTimeSn = String.valueOf(saniye); }
+        }
+        return lastTimeDk+":"+lastTimeSn;
+    }
     private void questReturn(int i, int max){
         if(i<max){
             examOptionTrue = examQuest.get(i).getDogruCevap();
@@ -115,33 +126,39 @@ public class ExamActivity extends AppCompatActivity {
             examOptionB.setText(examQuest.get(i).getCevapB());
             examOptionC.setText(examQuest.get(i).getCevapC());
             examOptionD.setText(examQuest.get(i).getCevapD());
-            examOptionE.setText(examQuest.get(i).getCevapD());
+            examOptionE.setText(examQuest.get(i).getCevapE());
             examDesp.setText(examQuest.get(i).getDesp());
             examQuestNext.setOnClickListener(v-> {
-                Handler handler = new Handler();
-                handler.postDelayed(new Runnable() {
-                    public void run() {
-
+               int tiklandi = optionBlock.indexOfChild(findViewById(optionBlock.getCheckedRadioButtonId()));
+               if(tiklandi != -1){
+                   int selectedId = optionBlock.getCheckedRadioButtonId();
+                   RadioButton radioButton = (RadioButton) findViewById(selectedId);
+                   String userAnswer = radioButton.getText().toString();
+                    if(examOptionTrue.equals(userAnswer)){
+                        Log.d("slkd", "burdaaa");
+                    }else{
+                        falseAnswerList.add(new ExamAnswer(examQuestId, userAnswer));
                     }
-                }, 5000);   //5 seconds
-               // Log.d("salman", ""+optionBlock.indexOfChild(findViewById(optionBlock.getCheckedRadioButtonId())));
-                questReturn(i+1, max);
+
+                   optionBlock.clearCheck();
+                   questReturn(i+1, max);
+               }
             });
             examQuestPass.setOnClickListener(v -> {
+                optionBlock.clearCheck();
                 examPass.add(i);
                 questReturn(i+1, max);
             });
         }else if(i == max){
             if(examPass.size() == 0){
-                examSoru.setText("Soru bitti");
-                examQuestNext.setClickable(false);
-                examQuestPass.setClickable(false);
+                examFinish();
             }else{
                 passQuestReturn(0);
             }
         }
     }
     private void passQuestReturn(int a) {
+        optionBlock.clearCheck();
         if(a<examPass.size()) {
             examOptionTrue = examQuest.get(examPass.get(a)).getDogruCevap();
             examQuestId = examQuest.get(examPass.get(a)).getSoruId();
@@ -150,12 +167,14 @@ public class ExamActivity extends AppCompatActivity {
             examOptionB.setText(examQuest.get(examPass.get(a)).getCevapB());
             examOptionC.setText(examQuest.get(examPass.get(a)).getCevapC());
             examOptionD.setText(examQuest.get(examPass.get(a)).getCevapD());
-            examOptionE.setText(examQuest.get(examPass.get(a)).getCevapD());
+            examOptionE.setText(examQuest.get(examPass.get(a)).getCevapE());
             examDesp.setText(examQuest.get(examPass.get(a)).getDesp());
             examQuestNext.setOnClickListener(v-> {
-               // Log.d("salman", ""+optionBlock.indexOfChild(findViewById(optionBlock.getCheckedRadioButtonId())));
-                examPass.remove(a);
-                passQuestReturn(a);
+                int tiklandi = optionBlock.indexOfChild(findViewById(optionBlock.getCheckedRadioButtonId()));
+                if(tiklandi != -1){
+                    examPass.remove(a);
+                    passQuestReturn(a);
+                }
             });
             examQuestPass.setOnClickListener(v -> {
                 passQuestReturn(a+1);
@@ -163,12 +182,22 @@ public class ExamActivity extends AppCompatActivity {
         }
         else if(a == examPass.size()){
             if(examPass.size() == 0){
-                examSoru.setText("Soru bitti");
-                examDesp.setText("Soru bitti");
-                examQuestNext.setClickable(false);
-                examQuestPass.setClickable(false);
+                examFinish();
             }else{ passQuestReturn(0); }
         }
+    }
+    private void examFinish(){
+        countDownTimer.cancel();
+        Bundle bundle = new Bundle();
+        Intent myIntent = new Intent(ExamActivity.this, ExamFinishActivity.class);
+        bundle.putString("finishTime", timeTranslate(examTime-lastTime));
+        bundle.putSerializable("falseAnswerList", falseAnswerList);
+        bundle.putString("examPub", examPub);
+        bundle.putString("examId", examId);
+        bundle.putInt("examQuestSize", examQuest.size());
+        myIntent.putExtra("bundle", bundle);
+        finish();
+        ExamActivity.this.startActivity(myIntent);
     }
 
     @Override

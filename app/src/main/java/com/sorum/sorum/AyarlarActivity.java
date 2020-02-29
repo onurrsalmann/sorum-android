@@ -1,11 +1,15 @@
 package com.sorum.sorum;
 
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -51,7 +55,13 @@ public class AyarlarActivity extends AppCompatActivity {
     private String namename;
     private Boolean sasa = true;
     private String userExam = "";
+    private String dbname;
+    private String dbusername;
+    private String dbexam;
+    Context context = this;
     FirebaseAuth firebaseAuth;
+    SQliteHelper sqlitedb = new SQliteHelper(context);
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -63,6 +73,8 @@ public class AyarlarActivity extends AppCompatActivity {
             window.setStatusBarColor(getApplication().getResources().getColor(R.color.white));
         }
 
+
+        sqlitedb.onUpgrade(sqlitedb.getWritableDatabase(),1,2);
         auth = FirebaseAuth.getInstance();
         DatabaseReference db = FirebaseDatabase.getInstance().getReference();
         FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
@@ -129,14 +141,15 @@ public class AyarlarActivity extends AppCompatActivity {
             }
         });
 
+
         if(sasa == true) {
             db.child("users").child(uid).addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
                 public void onDataChange(DataSnapshot dataSnapshot) {
                     Log.d("TAG", "BURDA00");
-                    String dbname = dataSnapshot.child("name").getValue().toString();
-                    String dbusername = dataSnapshot.child("username").getValue().toString();
-                    String dbexam = dataSnapshot.child("exam").getValue().toString();
+                    dbname = dataSnapshot.child("name").getValue().toString();
+                    dbusername = dataSnapshot.child("username").getValue().toString();
+                    dbexam = dataSnapshot.child("exam").getValue().toString();
                     namename = dbusername;
                     name.setText(dbname);
                     username.setText(dbusername);
@@ -225,7 +238,13 @@ public class AyarlarActivity extends AppCompatActivity {
                                         .addOnSuccessListener(new OnSuccessListener<Void>() {
                                             @Override
                                             public void onSuccess(Void aVoid) {
-                                                Log.d("Succes", "basarılı");
+                                                ProgressDialog progressDialog = ProgressDialog.show(context, "",
+                                                        "Kaydediliyor. Lütfen bekleyin...", true);
+                                                progressDialog.show();
+                                                sqlitedb.addUser(name_string,username_string,secilenSinav);
+                                                Intent myIntent = new Intent(AyarlarActivity.this, MainActivity.class);
+                                                finish();
+                                                AyarlarActivity.this.startActivity(myIntent);
                                             }
                                         })
                                         .addOnFailureListener(new OnFailureListener() {
@@ -253,7 +272,13 @@ public class AyarlarActivity extends AppCompatActivity {
                             .addOnSuccessListener(new OnSuccessListener<Void>() {
                                 @Override
                                 public void onSuccess(Void aVoid) {
-                                    Log.d("Succes", "basarılı");
+                                    ProgressDialog progressDialog = ProgressDialog.show(context, "",
+                                            "Kaydediliyor. Lütfen bekleyin...", true);
+                                    progressDialog.show();
+                                    sqlitedb.addUser(name_string,username_string,secilenSinav);
+                                    Intent myIntent = new Intent(AyarlarActivity.this, MainActivity.class);
+                                    finish();
+                                    AyarlarActivity.this.startActivity(myIntent);
                                 }
                             })
                             .addOnFailureListener(new OnFailureListener() {

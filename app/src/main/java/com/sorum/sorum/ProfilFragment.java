@@ -1,17 +1,16 @@
 package com.sorum.sorum;
 
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.Window;
-import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.TextView;
 
@@ -45,29 +44,27 @@ public class ProfilFragment extends Fragment {
         exam = bundle.getString("exam");
         username = bundle.getString("username");
         tvname.setText(name);
-        tvusername.setText(username);
+        tvusername.setText("@"+username);
         tvexam.setText(exam);
         sqlitedb.onUpgrade(sqlitedb.getWritableDatabase(),1,2);
-
-        logout.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v){
-                FirebaseAuth.getInstance().signOut();
-                sqlitedb.resetTables();
-                Intent intent = new Intent(getActivity(), LoginActivity.class);
-                intent.setFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
-                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                getActivity().finish();
-                startActivity(intent);
-            }
+        AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+        builder.setTitle("Çıkış yapmak istediğine emin misin?");
+        builder.setNegativeButton("Vazgeç", (dialog, id) -> { });
+        builder.setPositiveButton("Çıkış Yap", (dialog, id) -> {
+            FirebaseAuth.getInstance().signOut();
+            sqlitedb.resetTables();
+            Intent intent = new Intent(getActivity(), LoginActivity.class);
+            intent.setFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+            getActivity().finish();
+            startActivity(intent);
         });
-        ayarlar.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v){
-                Intent intent = new Intent(getActivity(), AyarlarActivity.class);
-                startActivity(intent);
-            }
+
+        logout.setOnClickListener(v1 -> builder.show());
+        ayarlar.setOnClickListener(v12 -> {
+            Intent intent = new Intent(getActivity(), AyarlarActivity.class);
+            startActivity(intent);
         });
         return v;
     }

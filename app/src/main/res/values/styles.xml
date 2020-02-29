@@ -1,6 +1,4 @@
 <resources>
-
-    <!-- Base application theme. -->
     <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
         <!-- Customize your theme here. -->
         <item name="colorPrimary">@color/colorPrimary</item>
@@ -13,7 +11,4 @@
     <style name="BottomNavigationView.Active" parent="@style/TextAppearance.AppCompat.Caption">
         <item name="android:textSize">10sp</item>
     </style>
-<!--<style name="spinnerTheme">
-        <item name="android:textColor">@color/black</item>
-    </style>-->
 </resources>

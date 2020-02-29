@@ -12,7 +12,24 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".ExamActivity"></activity>
+        <activity android:name=".WelcomeScreen"
+            android:screenOrientation="portrait" >
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+
+        <meta-data
+            android:name="firebase_performance_logcat_enabled"
+            android:value="true" />
+
+        <activity
+            android:name=".ExamFinishActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".ExamActivity"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".IstatistikActivity"
             android:screenOrientation="portrait" />
@@ -37,12 +54,7 @@
         <activity
             android:name=".MainActivity"
             android:screenOrientation="portrait"
-            android:theme="@style/Theme.AppCompat.Light.NoActionBar">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
+            android:theme="@style/AppTheme">
         </activity>
     </application>
 
