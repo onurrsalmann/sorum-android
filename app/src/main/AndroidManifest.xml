@@ -12,8 +12,7 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".WelcomeScreen"
-            android:screenOrientation="portrait" >
+        <activity android:name=".view.login.WelcomeScreen">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
@@ -25,35 +24,27 @@
             android:value="true" />
 
         <activity
-            android:name=".ExamFinishActivity"
-            android:screenOrientation="portrait" />
+            android:name=".view.exam.ExamFinishActivity"
+          />
         <activity
-            android:name=".ExamActivity"
-            android:screenOrientation="portrait" />
+            android:name=".view.exam.ExamActivity" />
         <activity
-            android:name=".IstatistikActivity"
-            android:screenOrientation="portrait" />
+            android:name=".view.statistic.IstatistikActivity" />
         <activity
-            android:name=".AyarlarActivity"
-            android:screenOrientation="portrait" />
+            android:name=".view.profil.AyarlarActivity" />
         <activity
-            android:name=".RegisterTwoActivity"
-            android:screenOrientation="portrait" />
+            android:name=".view.login.RegisterTwoActivity" />
         <activity
-            android:name=".PassChangeActivity"
-            android:screenOrientation="portrait" />
+            android:name=".view.login.PassChangeActivity" />
         <activity
-            android:name=".RegisterActivity"
-            android:screenOrientation="portrait" />
+            android:name=".view.login.RegisterActivity"
+            android:screenOrientation="fullSensor" />
         <activity
-            android:name=".DenemeStartActivity"
-            android:screenOrientation="portrait" />
+            android:name=".view.deneme.DenemeStartActivity" />
         <activity
-            android:name=".LoginActivity"
-            android:screenOrientation="portrait" />
+            android:name=".view.login.LoginActivity" />
         <activity
             android:name=".MainActivity"
-            android:screenOrientation="portrait"
             android:theme="@style/AppTheme">
         </activity>
     </application>

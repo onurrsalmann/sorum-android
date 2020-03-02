@@ -19,6 +19,9 @@ import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.sorum.sorum.model.SQliteHelper;
+import com.sorum.sorum.view.login.LoginActivity;
+
 import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Deque;
@@ -28,14 +31,15 @@ public class MainActivity extends AppCompatActivity {
     Context context = this;
     Deque<Integer> mStack = new ArrayDeque<>();
     boolean isBackPressed  = false;
-    Fragment HomeFragment = new HomeFragment();
-    Fragment SearchFragment = new SearchFragment();
-    Fragment DenemeFragment = new DenemeFragment();
-    Fragment ProfilFragment = new ProfilFragment();
+    Fragment HomeFragment = new com.sorum.sorum.view.home.HomeFragment();
+    Fragment SearchFragment = new com.sorum.sorum.view.search.SearchFragment();
+    Fragment DenemeFragment = new com.sorum.sorum.view.deneme.DenemeFragment();
+    Fragment ProfilFragment = new com.sorum.sorum.view.profil.ProfilFragment();
     FragmentManager mFragmentManager = getSupportFragmentManager();
     SQliteHelper sqlitedb = new SQliteHelper(context);
     LinearLayout ustBar;
     BottomNavigationView bottomnav;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -74,7 +78,7 @@ public class MainActivity extends AppCompatActivity {
             setBottomNavigationView(bundle);
 
             Istatistik.setOnClickListener(v -> {
-                Intent intent = new Intent(MainActivity.this, IstatistikActivity.class);
+                Intent intent = new Intent(MainActivity.this, com.sorum.sorum.view.statistic.IstatistikActivity.class);
                 startActivity(intent);
             });
         }
